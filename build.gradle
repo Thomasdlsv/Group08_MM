@@ -4,12 +4,11 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
-//mainClassName = 'com.titan.experiments.CalculateReturningVelocity_HillClimbing'
-mainClassName = 'com.HelloApplication'
+mainClassName = 'com.group08.HelloApplication'
 jar {
     duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest {
-        attributes('Main-Class': 'com.HelloApplication')
+        attributes('Main-Class': 'com.group08.HelloApplication')
     }
 
     from {
