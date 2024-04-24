@@ -1,19 +1,20 @@
-package com.math.solver;
+package com.sailing.math.solver;
 
-import com.math.StateSystem;
-import com.math.Vector;
-import com.math.functions.Function;
-import com.math.functions.TestFunction;
-import org.junit.jupiter.api.Test;
+import com.sailing.math.StateSystem;
+import com.sailing.math.Vector;
+import com.sailing.math.functions.Function;
+import com.sailing.math.functions.TestFunction;
+
+import org.junit.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 
-class EulerTest {
+public class EulerTest {
 
     @Test
-    void testEulerOnSimpleFunction() {
+    public void testEulerOnSimpleFunction() {
         Vector positions = new Vector(0,0,0);
         Vector velocities = new Vector(0,0,0);
         Vector accelerations = new Vector(0,0,0);
@@ -45,6 +46,5 @@ class EulerTest {
 
         assertEquals(new Vector(36, 36, 36), history.get(10).getPosition());
         assertEquals(new Vector(10, 10, 10), history.get(0).getVelocity());
-        assertEquals(1, 0);
     }
 }

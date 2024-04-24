@@ -1,4 +1,4 @@
-package com.group08.math;
+package com.sailing.math;
 
 public class VectorSizeException extends RuntimeException {
     public VectorSizeException(Vector v1, Vector v2) {

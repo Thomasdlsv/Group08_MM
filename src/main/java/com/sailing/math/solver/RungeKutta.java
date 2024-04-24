@@ -1,9 +1,9 @@
-package com.group08.math.solver;
+package com.sailing.math.solver;
 
-import com.group08.math.DifferentialEquation;
-import com.group08.math.StateSystem;
-import com.group08.math.Vector;
-import com.group08.math.functions.Function;
+import com.sailing.math.DifferentialEquation;
+import com.sailing.math.StateSystem;
+import com.sailing.math.Vector;
+import com.sailing.math.functions.Function;
 
 public class RungeKutta implements Solver {
 

@@ -1,6 +1,6 @@
-package com.group08.math.functions;
+package com.sailing.math.functions;
 
-import com.group08.math.Vector;
+import com.sailing.math.Vector;
 
 public interface Function {
 

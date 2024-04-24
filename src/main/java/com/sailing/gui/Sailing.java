@@ -1,11 +1,15 @@
-package com.group08;
+package com.sailing.gui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-public class HelloApplication extends Application {
+/**
+ * This acts as an entry point to the entire application
+ */
+public class Sailing extends Application {
+
     @Override
     public void start(Stage stage) {
         Scene scene = new Scene(new Pane());

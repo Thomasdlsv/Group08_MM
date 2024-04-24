@@ -1,6 +1,6 @@
-package com.group08.math;
+package com.sailing.math;
 
-import com.group08.math.functions.Function;
+import com.sailing.math.functions.Function;
 
 /**
  * Differential equation solves d/dt for positions and velocities: <br>
