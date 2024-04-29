@@ -4,7 +4,6 @@ import com.sailing.math.StateSystem;
 import com.sailing.math.Vector;
 import com.sailing.math.functions.Function;
 import com.sailing.math.functions.TestFunction;
-
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -32,19 +31,21 @@ public class EulerTest {
         }
 
         assertEquals(10, history.size());
+        System.out.println(history.get(0).getPosition());
+        System.out.println(new Vector(0, 0, 0));
         assertEquals(new Vector(0, 0, 0), history.get(0).getPosition());
         assertEquals(new Vector(0, 0, 0), history.get(0).getVelocity());
 
         assertEquals(new Vector(1, 1, 1), history.get(2).getPosition());
-        assertEquals(new Vector(2, 2, 2), history.get(0).getVelocity());
+        assertEquals(new Vector(2, 2, 2), history.get(2).getVelocity());
 
         assertEquals(new Vector(3, 3, 3), history.get(3).getPosition());
-        assertEquals(new Vector(3, 3, 3), history.get(0).getVelocity());
+        assertEquals(new Vector(3, 3, 3), history.get(3).getVelocity());
 
         assertEquals(new Vector(6, 6, 6), history.get(4).getPosition());
-        assertEquals(new Vector(4, 4, 4), history.get(0).getVelocity());
+        assertEquals(new Vector(4, 4, 4), history.get(4).getVelocity());
 
-        assertEquals(new Vector(36, 36, 36), history.get(10).getPosition());
-        assertEquals(new Vector(10, 10, 10), history.get(0).getVelocity());
+        assertEquals(new Vector(36, 36, 36), history.get(9).getPosition());
+        assertEquals(new Vector(9, 9, 9), history.get(9).getVelocity());
     }
 }

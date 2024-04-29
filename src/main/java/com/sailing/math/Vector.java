@@ -1,6 +1,7 @@
 package com.sailing.math;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Vector {
 
@@ -78,5 +79,18 @@ public class Vector {
         return "Vector{" +
                 "values=" + values +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Vector)) return false;
+        Vector v = (Vector) obj;
+        if (values.size() != v.values.size()) return false;
+        for (int i = 0; i < values.size(); i++) {
+            if (!Objects.equals(values.get(i), v.values.get(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
