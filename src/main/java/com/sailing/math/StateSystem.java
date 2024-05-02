@@ -2,9 +2,9 @@ package com.sailing.math;
 
 public class StateSystem {
 
-    private Vector position;
-    private Vector velocity;
-    private Vector acceleration;
+    private Vector position; // x0 = x, x1 = y, x2 = angle in degrees
+    private Vector velocity; // x0 = wind x, x1 = wind y, x2 = boat x, x3 = boat y
+    private Vector acceleration; // x0 = x, x1 = y
 
     private double mass;
 

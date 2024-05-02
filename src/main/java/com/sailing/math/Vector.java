@@ -74,6 +74,15 @@ public class Vector {
         }
     }
 
+    public Vector normalize() {
+        double length = getLength();
+        Vector result = new Vector();
+        for (double value : values) {
+            result.values.add(value / length);
+        }
+        return result;
+    }
+
     @Override
     public String toString() {
         return "Vector{" +
