@@ -32,7 +32,7 @@ public class LiftFunction implements Function{
         Vector2D boatVelocity = new Vector2D(v2.getValue(2), v2.getValue(3));
         Vector2D apparentWind = windVelocity.subtract(boatVelocity);
         double v = apparentWind.getLength();
-        double beta = apparentWind.toPolar().getX2() - v1.getValue(2);
+        double beta = Math.toDegrees(apparentWind.toPolar().getX2() - v1.getValue(2));
         double p = Constants.AIR_DENSITY;
         double C = Coefficients.calculateLiftCoefficient(beta);
         double s = Constants.SAIL_AREA;

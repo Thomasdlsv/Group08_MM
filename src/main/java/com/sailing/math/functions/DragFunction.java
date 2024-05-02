@@ -8,7 +8,7 @@ import com.sailing.math.physics.Constants;
 /**
  * D = 1/2 * p * C * (beta) * V^2 * S
  * Where:
- * D = lift
+ * D = drag
  * p = air density
  * C = drag coefficient
  * (beta) = angle of attack
@@ -24,7 +24,7 @@ public class DragFunction implements Function{
      * @param a mass. (ignored in this function)
      * @param h step size. (ignored in this function)
      * @param t time. (ignored in this function)
-     * @return Vector with the lift force.
+     * @return Vector with the drag force.
      */
 
     public Vector eval(Vector v1, Vector v2, double a, double h, double t) {
@@ -32,7 +32,7 @@ public class DragFunction implements Function{
         Vector2D boatVelocity = new Vector2D(v2.getValue(2), v2.getValue(3));
         Vector2D apparentWind = windVelocity.subtract(boatVelocity);
         double v = apparentWind.getLength();
-        double beta = apparentWind.toPolar().getX2() - v1.getValue(2);
+        double beta = Math.toDegrees(apparentWind.toPolar().getX2() - v1.getValue(2));
         double p = Constants.AIR_DENSITY;
         double C = Coefficients.calculateDragCoefficient(beta);
         double s = Constants.SAIL_AREA;
