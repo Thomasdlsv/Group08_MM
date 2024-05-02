@@ -1,4 +1,4 @@
-package com.sailing.math;
+package com.sailing.math.data_structures;
 
 public class Vector2D extends Vector {
 

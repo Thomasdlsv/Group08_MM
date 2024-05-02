@@ -1,6 +1,6 @@
 package com.sailing.math.functions;
 
-import com.sailing.math.Vector;
+import com.sailing.math.data_structures.Vector;
 
 public class TestFunction implements Function{
 

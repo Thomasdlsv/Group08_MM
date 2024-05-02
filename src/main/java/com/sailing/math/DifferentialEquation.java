@@ -1,5 +1,6 @@
 package com.sailing.math;
 
+import com.sailing.math.data_structures.Vector;
 import com.sailing.math.functions.Function;
 
 /**

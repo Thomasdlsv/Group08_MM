@@ -1,4 +1,4 @@
-package com.sailing.math;
+package com.sailing.math.data_structures;
 
 import java.util.ArrayList;
 import java.util.Objects;

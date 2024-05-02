@@ -1,5 +1,7 @@
 package com.sailing.math;
 
+import com.sailing.math.data_structures.Vector;
+
 public class StateSystem {
 
     private Vector position; // x0 = x, x1 = y, x2 = angle in degrees

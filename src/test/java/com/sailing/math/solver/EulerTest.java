@@ -1,7 +1,7 @@
 package com.sailing.math.solver;
 
 import com.sailing.math.StateSystem;
-import com.sailing.math.Vector;
+import com.sailing.math.data_structures.Vector;
 import com.sailing.math.functions.Function;
 import com.sailing.math.functions.TestFunction;
 import org.junit.Test;

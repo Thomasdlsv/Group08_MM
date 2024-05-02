@@ -1,7 +1,7 @@
 package com.sailing.math.functions;
 
-import com.sailing.math.Vector;
-import com.sailing.math.Vector2D;
+import com.sailing.math.data_structures.Vector;
+import com.sailing.math.data_structures.Vector2D;
 import com.sailing.math.physics.Coefficients;
 import com.sailing.math.physics.Constants;
 

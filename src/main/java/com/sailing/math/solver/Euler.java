@@ -2,7 +2,7 @@ package com.sailing.math.solver;
 
 import com.sailing.math.DifferentialEquation;
 import com.sailing.math.StateSystem;
-import com.sailing.math.Vector;
+import com.sailing.math.data_structures.Vector;
 import com.sailing.math.functions.Function;
 
 public class Euler implements Solver {
