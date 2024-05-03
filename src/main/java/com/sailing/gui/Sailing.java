@@ -19,7 +19,8 @@ public class Sailing extends Application {
 
     @Override
     public void start(Stage stage) {
-        Scene scene = new Scene(new WindTunnel(new SailboatGUI(new Sailboat())), WIDTH, HEIGHT);
+        Scene scene = new Scene(new WindTunnel(new SailboatGUI(new Sailboat(), new SailboatGUI.SailGUI())), WIDTH, HEIGHT);
+        scene.getRoot().requestFocus();
         stage.setTitle("Sailing Simulation");
         stage.setFullScreen(false);
         stage.setWidth(WIDTH);
