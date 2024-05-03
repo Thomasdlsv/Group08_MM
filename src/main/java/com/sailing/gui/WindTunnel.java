@@ -2,6 +2,7 @@ package com.sailing.gui;
 
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Scale;
 
 /**
  *
@@ -36,6 +37,16 @@ class WindTunnel extends Pane {
                    sailboat.getSail().heaveSail(1);
                    break;
            }
+       });
+
+       Scale s = new Scale();
+       s.setPivotX(Sailing.X_CENTER);
+       s.setPivotY(Sailing.Y_CENTER);
+       sailboat.getTransforms().add(s);
+
+       setOnScroll(event -> {
+           s.setX(s.getX() + event.getDeltaY() / 500);
+           s.setY(s.getY() + event.getDeltaY() / 500);
        });
     }
 
