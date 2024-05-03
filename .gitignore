@@ -9,3 +9,5 @@ ideas.txt
 
 # Ignore Gradle build output directory
 build
+/bin/
+/.settings/
