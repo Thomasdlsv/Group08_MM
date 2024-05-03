@@ -1,5 +1,6 @@
 package com.sailing.gui;
 
+import com.sailing.Sailboat;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -10,10 +11,19 @@ import javafx.stage.Stage;
  */
 public class Sailing extends Application {
 
+    public static final double WIDTH = 1280;
+    public static final double HEIGHT = 800;
+
+    public static final double X_CENTER = WIDTH / 2;
+    public static final double Y_CENTER = HEIGHT / 2;
+
     @Override
     public void start(Stage stage) {
-        Scene scene = new Scene(new Pane());
-        stage.setTitle("Hello!");
+        Scene scene = new Scene(new WindTunnel(new SailboatGUI(new Sailboat())), WIDTH, HEIGHT);
+        stage.setTitle("Sailing Simulation");
+        stage.setFullScreen(false);
+        stage.setWidth(WIDTH);
+        stage.setHeight(HEIGHT);
         stage.setScene(scene);
         stage.show();
     }

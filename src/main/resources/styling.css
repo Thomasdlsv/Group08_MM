@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'Baby Doll';
+    src: url('Handwritten.ttf');
+}
+
+.root {
+    -fx-font-size: 15pt;
+    -fx-font-family: 'Baby Doll';
+}
+
