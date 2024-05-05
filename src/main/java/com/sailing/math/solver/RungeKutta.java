@@ -5,6 +5,9 @@ import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector;
 import com.sailing.math.functions.Function;
 
+/**
+ * 4th order Runge-Kutta method
+ */
 public class RungeKutta implements Solver {
 
     @Override
@@ -50,7 +53,7 @@ public class RungeKutta implements Solver {
                         .add(k4[1])
                         .multiplyByScalar(1.0/6));
 
-        Vector accelerationsWi1 = k4[1];
+        Vector accelerationsWi1 = f.eval(positionsWi1, velocitiesWi1, mass, h, t + h);
 
         return new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass);
     }

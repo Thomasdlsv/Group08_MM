@@ -5,6 +5,7 @@ import java.util.Objects;
 
 public class Vector {
 
+    // immutable!
     private final ArrayList<Double> values = new ArrayList<>();
 
     public Vector(double... values) {
@@ -48,7 +49,7 @@ public class Vector {
     }
 
     public ArrayList<Double> getValues() {
-        return values;
+        return new ArrayList<>(values);
     }
 
     public int getSize() {
@@ -80,6 +81,12 @@ public class Vector {
         for (double value : values) {
             result.values.add(value / length);
         }
+        return result;
+    }
+
+    public Vector copy() {
+        Vector result = new Vector();
+        result.values.addAll(values);
         return result;
     }
 

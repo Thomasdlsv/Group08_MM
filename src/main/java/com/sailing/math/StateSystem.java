@@ -49,4 +49,8 @@ public class StateSystem {
     public void setAcceleration(Vector acceleration) {
         this.acceleration = acceleration;
     }
+
+    public StateSystem copy() {
+        return new StateSystem(position.copy(), velocity.copy(), acceleration.copy(), mass);
+    }
 }
