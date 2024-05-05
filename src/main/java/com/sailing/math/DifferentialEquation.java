@@ -16,7 +16,7 @@ public abstract class DifferentialEquation {
      * @param f function to calculate the derivative of the velocities
      * @param positions vector of all the positions
      * @param velocities vector of all the velocities
-     * @param masses masses of the objects
+     * @param mass mass of the boat
      * @param h step size
      * @param t time
      * @return result of the differential equation (result[0] = velocities, result[1] = acceleration)

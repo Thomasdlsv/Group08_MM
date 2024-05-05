@@ -15,19 +15,18 @@ import com.sailing.math.physics.Constants;
  * V = apparent wind speed
  * S = sail area
  */
-public class LiftFunction implements Function{
+public class LiftFunction implements Function {
 
     /**
      *
      * @param v1 position of Boat. (x0 = x, x1 = y, x2 = angle in degrees)
      * @param v2 velocities (Wind and Boat). (Wind: x0-x1, Boat x2-x3)
-     * @param a mass. (ignored in this function)
+     * @param m mass. (ignored in this function)
      * @param h step size. (ignored in this function)
      * @param t time. (ignored in this function)
      * @return Vector with the lift force.
      */
-
-    public Vector eval(Vector v1, Vector v2, double a, double h, double t) {
+    public Vector eval(Vector v1, Vector v2, double m, double h, double t) {
         Vector2D windVelocity = new Vector2D(v2.getValue(0), v2.getValue(1));
         Vector2D boatVelocity = new Vector2D(v2.getValue(2), v2.getValue(3));
         Vector2D apparentWind = windVelocity.subtract(boatVelocity);

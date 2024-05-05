@@ -23,7 +23,24 @@ public class Coefficients {
                 - 0.0455606772480888;
     }
 
-    public static double calculateDragCoefficient(double beta) {
-        return 0; // TODO: Implement drag coefficient calculation
+    /**
+     * This method is used to calculate the lift coefficient.
+     * The coefficients of the polynomials were calculated using MATLAB's polyfit() method.
+     * @param angleOfAttack angle of attack in degrees.
+     * @return lift coefficient.
+     */
+    public static double calculateDragCoefficient(double angleOfAttack) {
+        double x = angleOfAttack % 180;
+        return  - 2.34883452212131e-20  * Math.pow(x, 10)
+                + 1.16915339371553e-17  * Math.pow(x, 9)
+                - 7.19105243730552e-16  * Math.pow(x, 8)
+                - 6.78303608765851e-13  * Math.pow(x, 7)
+                + 2.00518143371719e-10  * Math.pow(x, 6)
+                - 2.61271931318120e-08  * Math.pow(x, 5)
+                + 1.92548190311079e-06  * Math.pow(x, 4)
+                - 9.01804243068557e-05  * Math.pow(x, 3)
+                + 0.00275939330472374   * Math.pow(x, 2)
+                - 0.0180052597286692    * Math.pow(x, 1)
+                + 0.0230541325838875;
     }
 }
