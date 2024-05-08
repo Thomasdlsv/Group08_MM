@@ -5,7 +5,7 @@ Source: https://www.osti.gov/servlets/purl/6548367 (page 19-20)
 
 # Full Data Set:
 [Angle, Lift Coefficient, Drag Coefficient]
-[0.0000, 0.0000, 0.0079;
+data = [0.0000, 0.0000, 0.0079;
 1.0000, 0.1100, 0.0080;
 2.0000, 0.2200, 0.0084;
 3.0000, 0.3300, 0.0089;
@@ -67,7 +67,7 @@ Source: https://www.osti.gov/servlets/purl/6548367 (page 19-20)
 
 # Reduced Data Set (every 2nd row):
 [Angle, Lift Coefficient, Drag Coefficient]
-[0.0000, 0.0000, 0.0079;
+data = [0.0000, 0.0000, 0.0079;
 2.0000, 0.2200, 0.0084;
 4.0000, 0.4400, 0.0098;
 6.0000, 0.6600, 0.0125;
