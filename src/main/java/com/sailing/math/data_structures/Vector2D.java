@@ -36,21 +36,39 @@ public class Vector2D extends Vector {
         return new Vector2D(x, y);
     }
 
-    public Vector2D rotate(double angle) {
+    public Vector2D rotate(double angleInDegrees) {
         if (POLAR) {
-            double theta = getX2() + angle;
+            double theta = getX2() + Math.toRadians(angleInDegrees);
             return new Vector2D(getX1(), theta);
         }
         Vector2D polar = toPolar();
-        double theta = polar.getX2() + angle;
+        double theta = polar.getX2() + Math.toRadians(angleInDegrees);
         return new Vector2D(polar.getX1(), theta, true).toCartesian();
     }
 
     public Vector2D add(Vector2D v) {
-        return new Vector2D(getX1() + v.getX1(), getX2() + v.getX2());
+        if (POLAR && v.POLAR) {
+            return new Vector2D(getX1() + v.getX1(), getX2() + v.getX2(), true);
+        }
+        if (POLAR) {
+            return add(v.toPolar());
+        }
+        if (!v.POLAR) {
+            return new Vector2D(getX1() + v.getX1(), getX2() + v.getX2());
+        }
+        return add(v.toCartesian());
     }
 
     public Vector2D subtract(Vector2D v) {
-        return new Vector2D(getX1() - v.getX1(), getX2() - v.getX2());
+        if (POLAR && v.POLAR) {
+            return new Vector2D(getX1() - v.getX1(), getX2() - v.getX2(), true);
+        }
+        if (POLAR) {
+            return subtract(v.toPolar());
+        }
+        if (!v.POLAR) {
+            return new Vector2D(getX1() - v.getX1(), getX2() - v.getX2());
+        }
+        return subtract(v.toCartesian());
     }
 }

@@ -1,5 +1,6 @@
 package com.sailing.math.functions;
 
+import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector;
 
 /**
@@ -19,7 +20,7 @@ public class WindForceAccelerationFunction implements Function {
 
     /**
      *
-     * @param v1 position of Boat. (x0 = x, x1 = y, x2 = angle in degrees)
+     * @param v1 position of Boat. (x0 = x, x1 = y, x2 = angle in degrees boat, x3 = angle in degrees sail (relative to boat)
      * @param v2 velocities (Wind and Boat). (Wind: x0-x1, Boat x2-x3)
      * @param m mass
      * @param h step size
@@ -32,7 +33,10 @@ public class WindForceAccelerationFunction implements Function {
 
         return drag.add(lift).multiplyByScalar(1d / m);
     }
-    
+
+    public Vector eval(StateSystem stateSystem, double h) {
+        return eval(stateSystem.getPosition(), stateSystem.getVelocity(), stateSystem.getMass(), h, stateSystem.getTime());
+    }
     
 
 }

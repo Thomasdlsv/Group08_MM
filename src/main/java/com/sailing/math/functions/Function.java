@@ -6,7 +6,7 @@ public interface Function {
 
     /**
      * This method is used to solve a function.
-     * @param v1 position of Boat. (x0 = x, x1 = y, x2 = angle in degrees)
+     * @param v1 position of Boat. (x0 = x, x1 = y, x2 = angle in degrees boat, x3 = angle in degrees sail (relative to boat)
      * @param v2 velocities (Wind and Boat). (Wind: x0-x1, Boat x2-x3)
      * @param m mass of Boat.
      * @param h step size.

@@ -12,11 +12,23 @@ public class Euler implements Solver {
 
         Vector[] wi1 = DifferentialEquation.solve(f, positions, velocities, mass, h, t);
 
-        Vector positionsWi1 = positions.add(wi1[0].multiplyByScalar(h));
-        Vector velocitiesWi1 = velocities.add(wi1[1].multiplyByScalar(h));
+        Vector positionsWi1 = new Vector(
+                positions.getValue(0) + wi1[0].getValue(0) * h,
+                positions.getValue(1) + wi1[0].getValue(1) * h,
+                positions.getValue(2),
+                positions.getValue(3)
+        );
+
+        Vector velocitiesWi1 =  new Vector(
+                velocities.getValue(0),
+                velocities.getValue(1),
+                velocities.getValue(2)  + wi1[1].getValue(0) * h,
+                velocities.getValue(3)  + wi1[1].getValue(1) * h
+        );
+
         Vector accelerationsWi1 = wi1[1];
 
-        return new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass);
+        return new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass, t + h);
     }
 
 }

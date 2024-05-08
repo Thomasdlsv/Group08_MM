@@ -60,7 +60,7 @@ public class AdamsMoulton implements Solver {
 
         Vector accelerationsWi1 = f.eval(positionsWi1, velocitiesWi1, mass, h, t + h);
 
-        StateSystem newState = new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass);
+        StateSystem newState = new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass, t + h);
         lastState = newState.copy();
 
         return newState;

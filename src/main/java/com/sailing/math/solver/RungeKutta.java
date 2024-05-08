@@ -55,15 +55,17 @@ public class RungeKutta implements Solver {
 
         Vector accelerationsWi1 = f.eval(positionsWi1, velocitiesWi1, mass, h, t + h);
 
-        return new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass);
+        return new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass, t + h);
     }
 
     /**
      * calculates the next k
-     * @param f
+     * @param f function
      * @param positions
      * @param velocities
      * @param mass
+     * @param h step size
+     * @param t time
      * @return
      */
     private Vector[] nextK(Function f, Vector positions, Vector velocities, double mass, double h, double t) {
