@@ -15,12 +15,12 @@ public class StateSystem {
 
     private double mass;
 
-    public StateSystem(Vector position, Vector velocity, Vector acceleration, double mass, Vector heading) {
+    public StateSystem(Vector position, Vector velocity, Vector acceleration, double mass) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
         this.mass = mass;
-        this.heading = heading;
+        
     }
 
     public Vector setcombinedPosition(Vector position,Vector heading){
@@ -60,7 +60,7 @@ public class StateSystem {
     }
 
     public StateSystem copy() {
-        return new StateSystem(position.copy(), velocity.copy(), acceleration.copy(), mass,heading.copy());
+        return new StateSystem(position.copy(), velocity.copy(), acceleration.copy(), mass);
     }
     public Vector getHeading() {
         return heading;
