@@ -31,5 +31,8 @@ public class WindForceAccelerationFunction implements Function {
         Vector lift = new LiftFunction().eval(v1, v2, m, h, t);
 
         return drag.add(lift).multiplyByScalar(1d / m);
-    };
+    }
+    
+    
+
 }
