@@ -50,6 +50,7 @@ public class StateSystem {
     @Override
     public String toString() {
         return "StateSystem{" + "\n" +
+                "\t time=" + time + ", \n" +
                 "\t position=" + position + ", \n" +
                 "\t velocity=" + velocity + ", \n" +
                 "\t acceleration=" + acceleration + ", \n" +
