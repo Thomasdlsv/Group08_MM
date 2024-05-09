@@ -57,7 +57,13 @@ public class Simulation {
     }
 
     public void step() {
-        currentState = solver.nextStep(f, currentState.getPosition(), currentState.getVelocity(), currentState.getMass(), currentState.getTime(), stepSize);
+        currentState = solver.nextStep(
+                f,
+                currentState.getPosition(),
+                currentState.getVelocity(),
+                currentState.getMass(),
+                stepSize,
+                currentState.getTime());
         history.add(currentState);
         System.out.println(currentState);
     }

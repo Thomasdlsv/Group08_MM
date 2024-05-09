@@ -15,6 +15,7 @@ import com.sailing.math.physics.Constants;
  * beta = angle of attack
  * V = apparent wind speed
  * S = sail area
+ * ==> roh * (m/s)^2 * m^2 = (kg/m^3) * (m/s)^2 * m^2 = (kg * m^2 * m^2) / (m^3 * s^2) = kg * m / s^2 = N
  */
 public class DragFunction implements Function {
 
@@ -25,7 +26,7 @@ public class DragFunction implements Function {
      * @param m mass. (ignored in this function)
      * @param h step size. (ignored in this function)
      * @param t time. (ignored in this function)
-     * @return Vector with the drag force.
+     * @return Vector with the drag force in Newtons.
      */
     public Vector eval(Vector v1, Vector v2, double m, double h, double t) {
         Vector2D windVelocity = new Vector2D(v2.getValue(0), v2.getValue(1));

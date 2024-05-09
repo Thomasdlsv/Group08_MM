@@ -66,7 +66,7 @@ public class RungeKutta implements Solver {
      * @param mass
      * @param h step size
      * @param t time
-     * @return
+     * @return [velocity, acceleration] ready to be added to [position, velocity]
      */
     private Vector[] nextK(Function f, Vector positions, Vector velocities, double mass, double h, double t) {
         Vector[] k = DifferentialEquation.solve(
@@ -76,8 +76,20 @@ public class RungeKutta implements Solver {
                 mass,
                 h,
                 t);
-        k[0] = k[0].multiplyByScalar(h);
-        k[1] = k[1].multiplyByScalar(h);
+
+        k[0] = new Vector(
+                k[0].getValue(2),
+                k[0].getValue(3),
+                0,
+                0
+        ).multiplyByScalar(h);
+
+        k[1] = new Vector(
+                0,
+                0,
+                k[1].getValue(0),
+                k[1].getValue(1)
+        ).multiplyByScalar(h);
         return k;
     }
 }

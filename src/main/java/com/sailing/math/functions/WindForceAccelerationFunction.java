@@ -15,6 +15,7 @@ import com.sailing.math.data_structures.Vector;
  * a = acceleration in m/s^2            <br>
  * F = wind force in Newtons            <br>
  * m = mass in kg                       <br>
+ * ==> N / kg = kg * (m/s^2) / kg = m/s^2
  */
 public class WindForceAccelerationFunction implements Function {
 
@@ -25,7 +26,7 @@ public class WindForceAccelerationFunction implements Function {
      * @param m mass
      * @param h step size
      * @param t time
-     * @return Vector with the acceleration of the boat.
+     * @return Vector with the acceleration of the boat in m/s^2.
      */
     public Vector eval(Vector v1, Vector v2, double m, double h, double t) {
         Vector drag = new DragFunction().eval(v1, v2, m, h, t);

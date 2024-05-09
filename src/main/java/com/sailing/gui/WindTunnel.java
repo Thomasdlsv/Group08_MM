@@ -7,7 +7,7 @@ import com.sailing.math.data_structures.Vector2D;
 import com.sailing.math.functions.DragFunction;
 import com.sailing.math.functions.LiftFunction;
 import com.sailing.math.functions.WindForceAccelerationFunction;
-import com.sailing.math.solver.Euler;
+import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -47,7 +47,7 @@ class WindTunnel extends Pane {
         double mass = 100;
         double time = 0;
         StateSystem stateSystem = new StateSystem(position, velocity, acceleration, mass, time);
-        Solver solver = new Euler();
+        Solver solver = new RungeKutta();
 
         simulation = new Simulation(solver, stateSystem, 1);
 
