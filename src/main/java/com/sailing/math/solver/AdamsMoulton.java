@@ -27,8 +27,18 @@ public class AdamsMoulton implements Solver {
         // f(i+1)
         StateSystem prediction = predictor.nextStep(f, positions, velocities, mass, h, t);
         Vector[] fi1 = new Vector[] {
-            prediction.getVelocity(),
-            prediction.getAcceleration()
+                new Vector(
+                        prediction.getVelocity().getValue(2),
+                        prediction.getVelocity().getValue(3),
+                        0,
+                        0
+                ),
+                new Vector(
+                        0,
+                        0,
+                        prediction.getAcceleration().getValue(0),
+                        prediction.getAcceleration().getValue(1)
+                ),
         };
 
         // f(i)
@@ -40,10 +50,33 @@ public class AdamsMoulton implements Solver {
                 h,
                 t);
 
+        fi[0] = new Vector(
+                fi[0].getValue(2),
+                fi[0].getValue(3),
+                0,
+                0
+        );
+        fi[1] = new Vector(
+                0,
+                0,
+                fi[1].getValue(0),
+                fi[1].getValue(1)
+        );
+
         // f(i-1)
         Vector[] fim1 = new Vector[] {
-            lastState.getVelocity(),
-            lastState.getAcceleration()
+                new Vector(
+                        lastState.getVelocity().getValue(2),
+                        lastState.getVelocity().getValue(3),
+                        0,
+                        0
+                ),
+                new Vector(
+                        0,
+                        0,
+                        lastState.getAcceleration().getValue(0),
+                        lastState.getAcceleration().getValue(1)
+                )
         };
 
         Vector positionsWi1 = positions
