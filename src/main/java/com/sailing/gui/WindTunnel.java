@@ -23,12 +23,12 @@ class WindTunnel extends Pane {
 
     private final Simulation simulation;
 
-    Arrow windVelocityArrow = new Arrow(100, 100, 100, 90, Color.ALICEBLUE);
-    Arrow accelerationArrow = new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED);
-    Arrow velocityArrow = new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.BLUE);
+    LabelArrow windVelocityArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.ALICEBLUE), "v", "w");
+    LabelArrow accelerationArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED), "F", "A");
+    LabelArrow velocityArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.BLUE), "v", "");
 
-    Arrow dragForceArrow = new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.GREEN);
-    Arrow liftForceArrow = new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.BLUEVIOLET);
+    LabelArrow dragForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.GREEN), "F", "D");
+    LabelArrow liftForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.YELLOW), "F", "L");
 
     WindTunnel(SailboatGUI boat) {
         this.sailboat = boat;
@@ -42,7 +42,7 @@ class WindTunnel extends Pane {
         getChildren().addAll(sailboat);
 
         Vector position = new Vector(0, 0, 0, 0);
-        Vector velocity = new Vector(1, 1, 0, 0);
+        Vector velocity = new Vector(0, 1, 0, 0);
         Vector acceleration = new Vector(0, 0);
         double mass = 100;
         double time = 0;
@@ -51,11 +51,7 @@ class WindTunnel extends Pane {
 
         simulation = new Simulation(solver, stateSystem, 1);
 
-        getChildren().add(windVelocityArrow);
-        getChildren().add(accelerationArrow);
-        getChildren().add(velocityArrow);
-        getChildren().add(dragForceArrow);
-        getChildren().add(liftForceArrow);
+        getChildren().addAll(accelerationArrow, dragForceArrow, liftForceArrow, velocityArrow, windVelocityArrow);
         drawArrows(simulation.getCurrentState());
         drawForceArrow(simulation.getCurrentState());
 

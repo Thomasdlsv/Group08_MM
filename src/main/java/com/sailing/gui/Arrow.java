@@ -45,6 +45,7 @@ public class Arrow extends Path {
         getElements().add(new LineTo(x1, y1));
         getElements().add(new LineTo(x2, y2));
         getElements().add(new LineTo(endX, endY));
+
     }
 
     public Arrow(Vector2D start, Vector2D end, Color color){
@@ -110,6 +111,26 @@ public class Arrow extends Path {
         this.endX = end.getX1();
         this.endY = end.getX2();
         rePaint();
+    }
+
+    public double getStartX() {
+        return startX;
+    }
+
+    public double getStartY() {
+        return startY;
+    }
+
+    public double getEndX() {
+        return endX;
+    }
+
+    public double getEndY() {
+        return endY;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public void setLengthAndAngle(double length, double angleInDegrees){
