@@ -37,6 +37,10 @@ class SailboatGUI extends Group {
             r.setPivotY(y);
         }
 
+        double getRotationAngle() {
+            return r.getAngle();
+        }
+
 
     }
 
@@ -81,5 +85,9 @@ class SailboatGUI extends Group {
 
     void steer(double angle) {
         rotate(r.getAngle() + angle);
+    }
+
+    double getRotationAngle() {
+        return r.getAngle();
     }
 }

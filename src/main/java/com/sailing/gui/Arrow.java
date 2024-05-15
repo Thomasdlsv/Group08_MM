@@ -143,4 +143,9 @@ public class Arrow extends Path {
         this.endY = newEnd.getX2();
         rePaint();
     }
+
+    public void setStartLengthAndAngle(Vector2D start, double length, double angleInDegrees) {
+       setStart(start);
+       setLengthAndAngle(length, angleInDegrees);
+    }
 }

@@ -24,7 +24,7 @@ class WindTunnel extends Pane {
     private final Simulation simulation;
 
     LabelArrow windVelocityArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.ALICEBLUE), "v", "w");
-    LabelArrow accelerationArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED), "F", "A");
+    LabelArrow aerodynamicalArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED), "F", "A");
     LabelArrow velocityArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.BLUE), "v", "");
 
     LabelArrow dragForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.GREEN), "F", "D");
@@ -51,7 +51,7 @@ class WindTunnel extends Pane {
 
         simulation = new Simulation(solver, stateSystem, 1);
 
-        getChildren().addAll(accelerationArrow, dragForceArrow, liftForceArrow, velocityArrow, windVelocityArrow);
+        getChildren().addAll(aerodynamicalArrow, dragForceArrow, liftForceArrow, velocityArrow, windVelocityArrow);
         drawArrows(simulation.getCurrentState());
         drawForceArrow(simulation.getCurrentState());
 
@@ -96,6 +96,7 @@ class WindTunnel extends Pane {
            s.setX(s.getX() + event.getDeltaY() / 500);
            s.setY(s.getY() + event.getDeltaY() / 500);
        });
+
     }
 
     private void drawForceArrow(StateSystem currentState) {
@@ -108,15 +109,20 @@ class WindTunnel extends Pane {
 
         double scalar = 500;
 
-        dragForceArrow.setLengthAndAngle(
+        double radius = sailboat.getSail().getHeight() / 4;
+
+        System.out.println("boat rotation: "+ sailboat.getRotationAngle() + "sail rotation: "+ sailboat.getSail().getRotationAngle());
+
+        dragForceArrow.setStartLengthAndAngle(new Vector2D(sailboat.getSail().getLayoutX() + sailboat.getSail().getWidth() / 2 - radius + radius * Math.cos(sailboat.getSail().getRotationAngle() * (Math.PI / 180)), sailboat.getSail().getLayoutY() + radius + radius * Math.sin(sailboat.getSail().getRotationAngle() * (Math.PI / 180))),
                 dragForceVector.getLength() * scalar * (1d/currentState.getMass()),
                 dragForceVector.toPolar().getX2());
-        liftForceArrow.setLengthAndAngle(
+        liftForceArrow.setStartLengthAndAngle(new Vector2D(sailboat.getSail().getLayoutX() + sailboat.getSail().getWidth() / 2, sailboat.getSail().getLayoutY() + sailboat.getSail().getBoundsInLocal().getHeight() / 4),
                 liftForceVector.getLength() * scalar * (1d/currentState.getMass()),
                 liftForceVector.toPolar().getX2());
-        accelerationArrow.setLengthAndAngle(
+        aerodynamicalArrow.setStartLengthAndAngle(new Vector2D(sailboat.getSail().getLayoutX() + sailboat.getSail().getWidth() / 2, sailboat.getSail().getLayoutY() + sailboat.getSail().getBoundsInLocal().getHeight() / 4),
                 accelerationVector.getLength() * scalar,
                 accelerationVector.toPolar().getX2());
+
 
     }
 
@@ -128,7 +134,7 @@ class WindTunnel extends Pane {
         double scalar = 50;
 
         windVelocityArrow.setLengthAndAngle(wind.getLength() * scalar, wind.toPolar().getX2());
-        accelerationArrow.setLengthAndAngle(acceleration.toPolar().getX1() * scalar, acceleration.toPolar().getX2());
+        aerodynamicalArrow.setLengthAndAngle(acceleration.toPolar().getX1() * scalar, acceleration.toPolar().getX2());
         velocityArrow.setLengthAndAngle(boat.getLength() * scalar, boat.toPolar().getX2());
     }
 

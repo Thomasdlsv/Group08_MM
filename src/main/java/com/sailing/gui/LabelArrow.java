@@ -39,7 +39,6 @@ public class LabelArrow extends Group {
         arrow.setLengthAndAngle(length, angleInDegrees);
         repaint();
 
-        System.out.println(arrow.getEndX() + " " + arrow.getEndY());
     }
 
     void repaint() {
@@ -47,4 +46,8 @@ public class LabelArrow extends Group {
         text.setLayoutY(arrow.getEndY() + 5);
     }
 
+    public void setStartLengthAndAngle(Vector2D start, double length, double angleInDegrees) {
+        arrow.setStart(start);
+        setLengthAndAngle(length, angleInDegrees);
+    }
 }
