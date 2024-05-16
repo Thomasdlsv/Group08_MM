@@ -42,7 +42,7 @@ class WindTunnel extends Pane {
 
         getChildren().addAll(sailboat);
 
-        Vector position = new Vector(0, 0, 0, 0);
+        Vector position = new Vector(0, 0, -90, 0);
         Vector velocity = new Vector(0, 1, 0, 0);
         Vector acceleration = new Vector(0, 0);
         double mass = 100;
@@ -87,6 +87,7 @@ class WindTunnel extends Pane {
                     drawArrows(simulation.getCurrentState());
                 }
            }
+           repaintSail();
            drawForceArrow(simulation.getCurrentState());
        });
 
@@ -116,9 +117,16 @@ class WindTunnel extends Pane {
 
         double radius = sailboat.getSail().getHeight() / 4;
 
-        System.out.println("boat rotation: "+ sailboat.getRotationAngle() + "sail rotation: "+ sailboat.getSail().getRotationAngle());
+        double xStart = (sailboat.getSail().localToScene(sailboat.getSail().getBoundsInLocal()).getCenterX());
 
-        dragForceArrow.setStartLengthAndAngle(new Vector2D(sailboat.getSail().getLayoutX() + sailboat.getSail().getWidth() / 2 - radius + radius * Math.cos(sailboat.getSail().getRotationAngle() * (Math.PI / 180)), sailboat.getSail().getLayoutY() + radius + radius * Math.sin(sailboat.getSail().getRotationAngle() * (Math.PI / 180))),
+        double yStart = (sailboat.getSail().localToScene(sailboat.getSail().getBoundsInLocal()).getCenterY());
+
+        //System.out.println("boat rotation: "+ sailboat.getRotationAngle() + "sail rotation: "+ sailboat.getSail().getRotationAngle());
+        System.out.println(String.format("global sail x: %f   global sail y: %f",
+                        sailboat.getSail().localToScene(sailboat.getSail().getBoundsInLocal()).getCenterX(),
+                sailboat.getSail().localToScene(sailboat.getSail().getBoundsInLocal()).getCenterY()));
+
+        dragForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
                 dragForceVector.getLength() * scalar * (1d/currentState.getMass()),
                 dragForceVector.toPolar().getX2());
         liftForceArrow.setStartLengthAndAngle(new Vector2D(sailboat.getSail().getLayoutX() + sailboat.getSail().getWidth() / 2, sailboat.getSail().getLayoutY() + sailboat.getSail().getBoundsInLocal().getHeight() / 4),
@@ -142,6 +150,24 @@ class WindTunnel extends Pane {
         windVelocityArrow.setLengthAndAngle(wind.getLength() * scalar, wind.toPolar().getX2());
         accelerationArrow.setLengthAndAngle(acceleration.toPolar().getX1() * scalar, acceleration.toPolar().getX2());
         velocityArrow.setLengthAndAngle(boat.getLength() * scalar, boat.toPolar().getX2());
+    }
+
+    private void repaintSail() {
+
+        double sailAngle = (simulation.getCurrentState().getPosition().getValue(2) +
+                simulation.getCurrentState().getPosition().getValue(3) + 360) % 360;
+        double windAngle = (Math.toDegrees(new Vector2D(simulation.getCurrentState().getVelocity().getValue(0),
+                simulation.getCurrentState().getVelocity().getValue(1)).toPolar().getX2())) % 360;
+        double resultingAngle = sailAngle - windAngle;
+
+        // System.out.println(String.format("sail angle: %f   winf angle: %f    res angle: %f", sailAngle, windAngle, resultingAngle));
+
+        if (resultingAngle > 0 && resultingAngle < 180) {
+           sailboat.getSail().getSailIV().setScaleX(-1);
+        } else {
+            sailboat.getSail().getSailIV().setScaleX(1);
+        }
+
     }
 
     public SailboatGUI getSailboat() {

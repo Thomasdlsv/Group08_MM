@@ -12,8 +12,8 @@ abstract class Images {
             true, false);
 
     static final Image sail = new Image("/sail.png",
-            Sailing.WIDTH * SCALE ,
-            Sailing.HEIGHT * SCALE,
+            Sailing.WIDTH * SCALE * 0.6,
+            Sailing.HEIGHT * SCALE * 0.6,
             true, false);
 
 }

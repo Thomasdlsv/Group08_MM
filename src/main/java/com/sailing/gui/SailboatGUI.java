@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 
+
 class SailboatGUI extends Group {
 
     static class SailGUI extends Pane {
@@ -17,8 +18,7 @@ class SailboatGUI extends Group {
 
         SailGUI() {
 
-            ImageView sailIV = new ImageView(Images.sail);
-            this.sailIV = sailIV;
+            sailIV = new ImageView(Images.sail);
 
             getTransforms().add(r);
             getChildren().add(sailIV);
@@ -37,6 +37,9 @@ class SailboatGUI extends Group {
             return r.getAngle();
         }
 
+        ImageView getSailIV() {
+            return sailIV;
+        }
 
     }
 
