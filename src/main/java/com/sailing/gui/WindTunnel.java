@@ -129,13 +129,13 @@ class WindTunnel extends Pane {
         dragForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
                 dragForceVector.getLength() * scalar * (1d/currentState.getMass()),
                 dragForceVector.toPolar().getX2());
-        liftForceArrow.setStartLengthAndAngle(new Vector2D(sailboat.getSail().getLayoutX() + sailboat.getSail().getWidth() / 2, sailboat.getSail().getLayoutY() + sailboat.getSail().getBoundsInLocal().getHeight() / 4),
+        liftForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
                 liftForceVector.getLength() * scalar * (1d/currentState.getMass()),
                 liftForceVector.toPolar().getX2());
-        accelerationArrow.setStartLengthAndAngle(new Vector2D(sailboat.getSail().getLayoutX() + sailboat.getSail().getWidth() / 2, sailboat.getSail().getLayoutY() + sailboat.getSail().getBoundsInLocal().getHeight() / 4),
+        accelerationArrow.setLengthAndAngle(
                 accelerationVector.getLength() * scalar,
                 accelerationVector.toPolar().getX2());
-        windForceArrow.setLengthAndAngle(
+        windForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
                 windForceVector.getLength() * scalar,
                 windForceVector.toPolar().getX2());
     }
