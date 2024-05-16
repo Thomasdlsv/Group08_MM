@@ -26,7 +26,7 @@ public class Vector2D extends Vector {
         if (POLAR) return this;
         double r = getLength();
         double theta = Math.atan2(getX2(), getX1());
-        return new Vector2D(r, theta);
+        return new Vector2D(r, theta, true);
     }
 
     public Vector2D toCartesian() {

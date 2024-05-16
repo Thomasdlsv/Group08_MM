@@ -28,10 +28,6 @@ class SailboatGUI extends Group {
             r.setAngle(angle);
         }
 
-        void heaveSail(double angle) {
-            rotate(r.getAngle() + angle);
-        }
-
         void setPivotPoint(double x, double y) {
             r.setPivotX(x);
             r.setPivotY(y);
@@ -72,7 +68,7 @@ class SailboatGUI extends Group {
     }
 
     void rotate(double angle) {
-        r.setAngle(angle);
+        r.setAngle(angle + 90);
     }
 
     Sailboat getBoat() {
