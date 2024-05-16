@@ -27,7 +27,7 @@ public class EulerTest {
         history.add(system);
 
         for (int i = 0; i < 10; i++) {
-            system = solver.nextStep(f, system.getPosition(), system.getVelocity(), system.getMass(), h, t);
+            system = solver.nextStep(f, system.getPosition(), system.getVelocity(), system.getMass(), h, system.getTime());
             history.add(system);
         }
 
