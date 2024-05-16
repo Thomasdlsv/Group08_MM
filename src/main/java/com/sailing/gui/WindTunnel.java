@@ -24,11 +24,12 @@ class WindTunnel extends Pane {
     private final Simulation simulation;
 
     LabelArrow windVelocityArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.ALICEBLUE), "v", "w");
-    LabelArrow accelerationArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED), "F", "A");
+    LabelArrow accelerationArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED), "a", "");
     LabelArrow velocityArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.BLUE), "v", "");
 
     LabelArrow dragForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.GREEN), "F", "D");
     LabelArrow liftForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.YELLOW), "F", "L");
+    LabelArrow windForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.ORANGE), "F", "D+L");
 
     WindTunnel(SailboatGUI boat) {
         this.sailboat = boat;
@@ -51,7 +52,7 @@ class WindTunnel extends Pane {
 
         simulation = new Simulation(solver, stateSystem, 1);
 
-        getChildren().addAll(accelerationArrow, dragForceArrow, liftForceArrow, velocityArrow, windVelocityArrow);
+        getChildren().addAll(accelerationArrow, dragForceArrow, liftForceArrow, velocityArrow, windVelocityArrow, windForceArrow);
         drawArrows(simulation.getCurrentState());
         drawForceArrow(simulation.getCurrentState());
 
@@ -60,24 +61,26 @@ class WindTunnel extends Pane {
         windLabel.setX(120);
         windLabel.setY(90);
         getChildren().add(windLabel);
+        sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
+        sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
 
         setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case LEFT -> {
-                    sailboat.steer(-1);
                     simulation.rotateBoat(-1);
+                    sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
                 }
                 case RIGHT -> {
-                    sailboat.steer(1);
                     simulation.rotateBoat(1);
+                    sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
                 }
                 case UP -> {
-                    sailboat.getSail().heaveSail(-1);
                     simulation.rotateSail(-1);
+                    sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
                 }
                 case DOWN -> {
-                    sailboat.getSail().heaveSail(1);
                     simulation.rotateSail(1);
+                    sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
                 }
                 case SPACE -> {
                     simulation.step();
@@ -102,9 +105,11 @@ class WindTunnel extends Pane {
         Vector drag = new DragFunction().eval(currentState, 1);
         Vector lift = new LiftFunction().eval(currentState, 1);
         Vector acceleration = new WindForceAccelerationFunction().eval(currentState, 1);
+        Vector windForce = new WindForceAccelerationFunction().calculateAcceleration(currentState, 1);
         Vector2D dragForceVector = new Vector2D(drag.getValue(0), drag.getValue(1));
         Vector2D liftForceVector = new Vector2D(lift.getValue(0), lift.getValue(1));
         Vector2D accelerationVector = new Vector2D(acceleration.getValue(0), acceleration.getValue(1));
+        Vector2D windForceVector = new Vector2D(windForce.getValue(0), windForce.getValue(1));
 
         double scalar = 500;
 
@@ -117,7 +122,9 @@ class WindTunnel extends Pane {
         accelerationArrow.setLengthAndAngle(
                 accelerationVector.getLength() * scalar,
                 accelerationVector.toPolar().getX2());
-
+        windForceArrow.setLengthAndAngle(
+                windForceVector.getLength() * scalar,
+                windForceVector.toPolar().getX2());
     }
 
     private void drawArrows(StateSystem currentState) {
