@@ -19,9 +19,13 @@ class SailboatGUI extends Group {
         SailGUI() {
 
             sailIV = new ImageView(Images.sail);
-
+            double startX = sailIV.getBoundsInLocal().getWidth() / 2;
+            double endX = sailIV.getBoundsInLocal().getWidth() / 2;
+            double startY = sailIV.getLayoutY();
+            double endY = sailIV.getBoundsInLocal().getHeight();
+            Line chord = new Line(startX, startY, endX, endY);
             getTransforms().add(r);
-            getChildren().add(sailIV);
+            getChildren().addAll(sailIV, chord);
         }
 
         void rotate(double angle) {
