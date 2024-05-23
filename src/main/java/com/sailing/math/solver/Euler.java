@@ -5,6 +5,8 @@ import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector;
 import com.sailing.math.functions.Function;
 
+import static com.sailing.math.data_structures.Round.round;
+
 public class Euler implements Solver {
 
     @Override
@@ -28,7 +30,7 @@ public class Euler implements Solver {
 
         Vector accelerationsWi1 = wi1[1];
 
-        return new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass, t + h);
+        return new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass, round(t+h));
     }
 
 }

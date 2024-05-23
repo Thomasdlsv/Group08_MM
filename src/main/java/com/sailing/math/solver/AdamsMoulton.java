@@ -5,6 +5,8 @@ import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector;
 import com.sailing.math.functions.Function;
 
+import static com.sailing.math.data_structures.Round.round;
+
 /**
  * 2 step Adams-Moulton method (predictor-corrector)
  */
@@ -26,20 +28,26 @@ public class AdamsMoulton implements Solver {
 
         // f(i+1)
         StateSystem prediction = predictor.nextStep(f, positions, velocities, mass, h, t);
-        Vector[] fi1 = new Vector[] {
-                new Vector(
-                        prediction.getVelocity().getValue(2),
-                        prediction.getVelocity().getValue(3),
-                        0,
-                        0
-                ),
-                new Vector(
-                        0,
-                        0,
-                        prediction.getAcceleration().getValue(0),
-                        prediction.getAcceleration().getValue(1)
-                ),
-        };
+        Vector[] fi1 = DifferentialEquation.solve(
+                f,
+                prediction.getPosition(),
+                prediction.getVelocity(),
+                prediction.getMass(),
+                h,
+                prediction.getTime());
+
+        fi1[0] = new Vector(
+                fi1[0].getValue(2),
+                fi1[0].getValue(3),
+                0,
+                0
+        );
+        fi1[1] = new Vector(
+                0,
+                0,
+                fi1[1].getValue(0),
+                fi1[1].getValue(1)
+        );
 
         // f(i)
         Vector[] fi = DifferentialEquation.solve(
@@ -91,9 +99,9 @@ public class AdamsMoulton implements Solver {
                                 .add(fim1[1].multiplyByScalar(-1))
                                 .multiplyByScalar(h / 12d));
 
-        Vector accelerationsWi1 = f.eval(positionsWi1, velocitiesWi1, mass, h, t + h);
+        Vector accelerationsWi1 = f.eval(positionsWi1, velocitiesWi1, mass, h, round(t + h));
 
-        StateSystem newState = new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass, t + h);
+        StateSystem newState = new StateSystem(positionsWi1, velocitiesWi1, accelerationsWi1, mass, round(t + h));
         lastState = newState.copy();
 
         return newState;

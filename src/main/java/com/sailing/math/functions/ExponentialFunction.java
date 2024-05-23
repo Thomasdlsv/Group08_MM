@@ -1,7 +1,6 @@
-package com.sailing.math.solver;
+package com.sailing.math.functions;
 
 import com.sailing.math.data_structures.Vector;
-import com.sailing.math.functions.Function;
 
 public class ExponentialFunction implements Function {
 
@@ -9,6 +8,6 @@ public class ExponentialFunction implements Function {
     public Vector eval(Vector positions, Vector velocities, double mass, double h, double t) {
         double y = positions.getValue(0);
         // dy/dx = y
-        return new Vector(y, 0, 0, 0);
+        return new Vector(y, y, y, y);
     }
 }
