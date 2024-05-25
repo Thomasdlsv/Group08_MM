@@ -3,14 +3,14 @@ package com.sailing.math.physics;
 public class Coefficients {
 
     public enum ReynoldsNumber {
-        RE40K, RE80K, RE360K
+        RE40K, RE80K, RE160K, RE360K
     }
 
     public static ReynoldsNumber reynoldsNumber = ReynoldsNumber.RE360K;
 
     /**
      * This method is used to calculate the lift coefficient.
-     * The coefficients of the polynomials were calculated using MATLAB's polyfit() method.
+     * The coefficients of the polynomials were calculated using NumPy's polyfit() method.
      * @param angleOfAttack angle of attack in degrees.
      * @return lift coefficient.
      */
@@ -18,15 +18,16 @@ public class Coefficients {
         return switch (reynoldsNumber) {
             case RE40K -> cl40K(angleOfAttack);
             case RE80K -> cl80K(angleOfAttack);
+            case RE160K -> cl160K(angleOfAttack);
             case RE360K -> cl360K(angleOfAttack);
         };
     }
 
     /**
-     * This method is used to calculate the lift coefficient.
-     * The coefficients of the polynomials were calculated using MATLAB's polyfit() method.
+     * This method is used to calculate the drag coefficient.
+     * The coefficients of the polynomials were calculated using NumPy's polyfit() method.
      * @param angleOfAttack angle of attack in degrees.
-     * @return lift coefficient.
+     * @return drag coefficient.
      */
     public static double calculateDragCoefficient(double angleOfAttack) {
         double x = angleOfAttack % 180;
@@ -66,6 +67,28 @@ public class Coefficients {
     }
 
     /**
+     * Calculate the lift coefficient for Reynolds number 160k.
+     * @param angleOfAttack angle of attack in degrees.
+     * @return lift coefficient.
+     */
+    public static double cl160K(double angleOfAttack) {
+        double x = angleOfAttack % 180;
+        return  - 3.80538880e-22 * Math.pow(x, 12)
+                + 4.39074107e-19 * Math.pow(x, 11)
+                - 2.22386892e-16 * Math.pow(x, 10)
+                + 6.50298778e-14 * Math.pow(x, 9)
+                - 1.21444459e-11 * Math.pow(x, 8)
+                + 1.51245183e-09 * Math.pow(x, 7)
+                - 1.27263345e-07 * Math.pow(x, 6)
+                + 7.16670805e-06 * Math.pow(x, 5)
+                - 2.61185279e-04 * Math.pow(x, 4)
+                + 5.75117150e-03 * Math.pow(x, 3)
+                - 6.73014971e-02 * Math.pow(x, 2)
+                + 3.43470555e-01 * Math.pow(x, 1)
+                - 7.70536143e-02;
+    }
+
+    /**
      * Calculate the lift coefficient for Reynolds number 80k.
      * @param angleOfAttack angle of attack in degrees.
      * @return lift coefficient.
@@ -94,18 +117,18 @@ public class Coefficients {
      */
     public static double cl40K(double angleOfAttack) {
         double x = angleOfAttack % 180;
-        return  - 1.25422792e-21 * Math.pow(x, 12)
-                + 1.33346104e-18 * Math.pow(x, 11)
-                - 6.20601813e-16 * Math.pow(x, 10)
-                + 1.66154589e-13 * Math.pow(x, 9)
-                - 2.82824177e-11 * Math.pow(x, 8)
-                + 3.19283649e-09 * Math.pow(x, 7)
-                - 2.41929623e-07 * Math.pow(x, 6)
-                + 1.21714377e-05 * Math.pow(x, 5)
-                - 3.92370018e-04 * Math.pow(x, 4)
-                + 7.53517066e-03 * Math.pow(x, 3)
-                - 7.47686593e-02 * Math.pow(x, 2)
-                + 3.03500782e-01 * Math.pow(x, 1)
-                - 2.43636579e-02;
+        return  - 5.24355321e-22 * Math.pow(x, 12)
+                + 5.87755779e-19 * Math.pow(x, 11)
+                - 2.89008488e-16 * Math.pow(x, 10)
+                + 8.19388682e-14 * Math.pow(x, 9)
+                - 1.48055281e-11 * Math.pow(x, 8)
+                + 1.77848682e-09 * Math.pow(x, 7)
+                - 1.43694217e-07 * Math.pow(x, 6)
+                + 7.71858604e-06 * Math.pow(x, 5)
+                - 2.65548530e-04 * Math.pow(x, 4)
+                + 5.41984406e-03 * Math.pow(x, 3)
+                - 5.65701593e-02 * Math.pow(x, 2)
+                + 2.41847930e-01 * Math.pow(x, 1)
+                + 6.87196997e-03;
     }
 }
