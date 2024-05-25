@@ -2,7 +2,7 @@ package com.sailing;
 
 import com.sailing.gui.Sailing;
 /**
- * This acts as an entry point to the entire applicationl
+ * This acts as an entry point to the entire application.
  */
 public class App {
 

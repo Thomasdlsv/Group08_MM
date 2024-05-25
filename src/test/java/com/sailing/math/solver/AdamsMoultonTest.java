@@ -19,7 +19,7 @@ public class AdamsMoultonTest {
         double mass = 1;
         double h = 1;
         double t = 0;
-        StateSystem system = new StateSystem(positions, velocities, accelerations, mass);
+        StateSystem system = new StateSystem(positions, velocities, accelerations, mass, t);
         Solver solver = new AdamsMoulton(new Euler());
         Function f = (v1, v2, m, h1, t1) -> new Vector(3, 3, 3, 3 );
         ArrayList<StateSystem> history = new ArrayList<>();

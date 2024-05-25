@@ -20,7 +20,7 @@ public class RungeKuttaTest {
         double mass = 1;
         double h = 1;
         double t = 0;
-        StateSystem system = new StateSystem(positions, velocities, accelerations, mass);
+        StateSystem system = new StateSystem(positions, velocities, accelerations, mass, t);
         Solver solver = new RungeKutta();
         Function f = new TestFunction();
         ArrayList<StateSystem> history = new ArrayList<>();

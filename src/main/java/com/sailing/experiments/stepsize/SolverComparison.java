@@ -13,6 +13,11 @@ import com.sailing.math.solver.Solver;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Class to compare the solvers with different step sizes.
+ * The solvers are compared by calculating the relative error and absolute error of the numerical solution.
+ * The results are written to a csv file.
+ */
 public class SolverComparison {
 
     enum FunctionType {
@@ -32,18 +37,17 @@ public class SolverComparison {
 
         Vector initialPosition = new Vector(functionType.initialValue, functionType.initialValue, functionType.initialValue, functionType.initialValue);
         Vector initialVelocity = new Vector(functionType.initialValue, functionType.initialValue, functionType.initialValue, functionType.initialValue);
-        double mass = 1.0; // Mass is not used in the functions
 
         double[] stepSizes = {0.0000001, 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 0.25, 0.5, 1.0};
         double targetTime = 4.0;
 
         String path = "src/main/java/com/sailing/experiments/stepsize/results/";
-        compareSolvers(functionType, initialPosition, initialVelocity, mass, stepSizes, targetTime, path + "euler_results_sin.csv", new Euler());
-        compareSolvers(functionType, initialPosition, initialVelocity, mass, stepSizes, targetTime, path + "rk_results_sin.csv", new RungeKutta());
-        compareSolvers(functionType, initialPosition, initialVelocity, mass, stepSizes, targetTime, path + "am_results_sin.csv", new AdamsMoulton(new Euler()));
+        compareSolvers(functionType, initialPosition, initialVelocity, stepSizes, targetTime, path + "euler_results_sin.csv", new Euler());
+        compareSolvers(functionType, initialPosition, initialVelocity, stepSizes, targetTime, path + "rk_results_sin.csv", new RungeKutta());
+        compareSolvers(functionType, initialPosition, initialVelocity, stepSizes, targetTime, path + "am_results_sin.csv", new AdamsMoulton(new Euler()));
     }
 
-    private static void compareSolvers(FunctionType functionType, Vector initialPosition, Vector initialVelocity, double mass, double[] stepSizes, double targetTime, String fileName, Solver solver) throws IOException {
+    private static void compareSolvers(FunctionType functionType, Vector initialPosition, Vector initialVelocity, double[] stepSizes, double targetTime, String fileName, Solver solver) throws IOException {
         FileWriter writer = new FileWriter(fileName);
         writer.append("h,RelativeError,AbsoluteError\n");
 
@@ -51,7 +55,7 @@ public class SolverComparison {
             double t = 0.0;
             Vector positions = initialPosition.copy();
             Vector velocities = initialVelocity.copy();
-            StateSystem state = new StateSystem(positions, velocities, new Vector(0, 0, 0, 0), mass, t);
+            StateSystem state = new StateSystem(positions, velocities, new Vector(0, 0, 0, 0), 1, t);
 
             while (state.getTime() < targetTime) {
                 state = solver.nextStep(functionType.function, state.getPosition(), state.getVelocity(), state.getMass(), h, state.getTime());

@@ -19,7 +19,6 @@ public class Coefficients {
             case RE40K -> cl40K(angleOfAttack);
             case RE80K -> cl80K(angleOfAttack);
             case RE360K -> cl360K(angleOfAttack);
-            default -> throw new IllegalStateException("Unexpected value: " + reynoldsNumber);
         };
     }
 

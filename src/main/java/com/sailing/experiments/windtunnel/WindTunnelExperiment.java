@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Wind tunnel experiment to compare the calculated lift and drag forces with the measured data.
+ * The data is read from a CSV file and the results are written to a CSV file.
+*/
 public class WindTunnelExperiment {
 
     public static void main(String[] args) throws IOException {
@@ -29,20 +33,28 @@ public class WindTunnelExperiment {
         for (int i = 0; i < data.size(); i += 1) {
             double liftData = data.get(i).get(0);
             double dragData = data.get(i).get(1);
-            double windspeed = data.get(i).get(2);
+            double windSpeed = data.get(i).get(2);
             double angle = data.get(i).get(3);
 
             Vector position = new Vector(0, 0, 0, angle);
-            Vector velocity = new Vector(windspeed, 0, 0, 0);
+            Vector velocity = new Vector(windSpeed, 0, 0, 0);
             double liftCalculated = - new LiftFunction().eval(position, velocity, 1, 1, 0).getValue(1);
             double dragCalculated = new DragFunction().eval(position, velocity,1, 1, 0).getValue(0);
-            writer.append(angle + "," + windspeed + "," + liftCalculated + "," + dragCalculated + "," + liftData + "," + dragData + "\n");
+            writer.append(angle + "," + windSpeed + "," + liftCalculated + "," + dragCalculated + "," + liftData + "," + dragData + "\n");
         }
 
         writer.flush();
         writer.close();
     }
 
+    /**
+     * Read CSV data from a file and return it as a list of lists of doubles.
+     * @param path path to the CSV file
+     * @param skipHeader boolean: skip the header of the CSV file
+     * @return list of lists of doubles
+     * @throws RuntimeException if the file is not found or cannot be read
+     * @throws NumberFormatException if the values in the CSV file cannot be parsed to doubles
+     */
     static ArrayList<ArrayList<Double>> readCSVData(String path, boolean skipHeader) {
         ArrayList<ArrayList<Double>> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {

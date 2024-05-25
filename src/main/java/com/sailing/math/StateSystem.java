@@ -2,11 +2,15 @@ package com.sailing.math;
 
 import com.sailing.math.data_structures.Vector;
 
+/**
+ * StateSystem represents the state of the system at a given time.
+ * It contains the position (boat), velocity (wind and boat), acceleration (boat) and mass (boat) of the system.
+ */
 public class StateSystem {
 
-    private final Vector position; // x0 = x, x1 = y, x2 = angle in degrees boat, x3 = angle in degrees sail (relative to boat)
-    private final Vector velocity; // x0 = wind x, x1 = wind y, x2 = boat x, x3 = boat y
-    private final Vector acceleration; // x0 = x, x1 = y
+    private final Vector position;      // x0 = x, x1 = y, x2 = angle in degrees boat, x3 = angle in degrees sail (relative to boat)
+    private final Vector velocity;      // x0 = wind x, x1 = wind y, x2 = boat x, x3 = boat y
+    private final Vector acceleration;  // x0 = x, x1 = y
     private final double mass;
 
     private final double time;

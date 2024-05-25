@@ -7,14 +7,14 @@ import com.sailing.math.physics.Coefficients;
 import com.sailing.math.physics.Constants;
 
 /**
- * L = 1/2 * p * C(beta) * V^2 * S
- * Where:
- * L = lift
- * p = air density
- * C(beta) = lift coefficient in respect to beta
- * beta = angle of attack
- * V = apparent wind speed
- * S = sail area
+ * L = 1/2 * p * C(beta) * V^2 * S                      <br>
+ * Where:                                               <br>
+ * L = lift                                             <br>
+ * p = air density                                      <br>
+ * C(beta) = lift coefficient in respect to beta        <br>
+ * beta = angle of attack                               <br>
+ * V = apparent wind speed                              <br>
+ * S = sail area                                        <br>
  * ==> roh * (m/s)^2 * m^2 = (kg/m^3) * (m/s)^2 * m^2 = (kg * m^2 * m^2) / (m^3 * s^2) = kg * m / s^2 = N
  */
 public class LiftFunction implements Function {
@@ -36,10 +36,10 @@ public class LiftFunction implements Function {
         double beta = Math.toDegrees(apparentWind.toPolar().getX2()) + (v1.getValue(2) + v1.getValue(3));
         if (beta < 0) beta += 360;
         double p = Constants.AIR_DENSITY;
-        double C = Coefficients.calculateLiftCoefficient(beta);
+        double Cl = Coefficients.calculateLiftCoefficient(beta);
         double s = Constants.SAIL_AREA;
 
-        double lift = 0.5 * p * C * Math.pow(v, 2) * s;
+        double lift = 0.5 * p * Cl * Math.pow(v, 2) * s;
         Vector liftDirection = apparentWind.rotate(-90).normalize();
         return liftDirection.multiplyByScalar(lift);
     };

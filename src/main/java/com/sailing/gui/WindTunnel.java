@@ -152,7 +152,6 @@ class WindTunnel extends Pane {
     }
 
     private void repaintSail() {
-
         double sailAngle = (simulation.getCurrentState().getPosition().getValue(2) +
                 simulation.getCurrentState().getPosition().getValue(3) + 360) % 360;
         double windAngle = (Math.toDegrees(new Vector2D(
@@ -160,8 +159,6 @@ class WindTunnel extends Pane {
                 simulation.getCurrentState().getVelocity().getValue(1) - simulation.getCurrentState().getVelocity().getValue(3))
                 .toPolar().getX2())) % 360;
         double resultingAngle = sailAngle - windAngle;
-
-        // System.out.println(String.format("sail angle: %f   winf angle: %f    res angle: %f", sailAngle, windAngle, resultingAngle));
 
         if (resultingAngle > 0 && resultingAngle < 180) {
            sailboat.getSail().getSailIV().setScaleX(-1);

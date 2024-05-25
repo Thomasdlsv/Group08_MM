@@ -8,6 +8,10 @@ import com.sailing.math.solver.Solver;
 
 import java.util.ArrayList;
 
+/**
+ * Simulation class that runs the simulation of the boat and the wind forces.
+ * The simulation is run by stepping through the simulation and updating the state of the system.
+ */
 public class Simulation {
 
     Solver solver;
@@ -15,6 +19,8 @@ public class Simulation {
     StateSystem currentState;
     double stepSize;
     Function f = new WindForceAccelerationFunction();
+
+    public static boolean LOG = false; // Set to true to log the state of the system at each step
 
     public Simulation(Solver solver, StateSystem initialState, double stepSize) {
         this.solver = solver;
@@ -24,6 +30,11 @@ public class Simulation {
         history.add(currentState);
     }
 
+    /**
+     * Rotate the boat by a given angle. <br>
+     * This is one of the two control inputs of the boat.
+     * @param angle
+     */
     public void rotateBoat(double angle) {
         Vector currentPosition = currentState.getPosition();
         Vector position = new Vector(
@@ -40,6 +51,11 @@ public class Simulation {
         history.add(currentState);
     }
 
+    /**
+     * Rotate the sail by a given angle. <br>
+     * This is one of the two control inputs of the boat.
+     * @param angle
+     */
     public void rotateSail(double angle) {
         Vector currentPosition = currentState.getPosition();
         Vector position = new Vector(
@@ -56,6 +72,10 @@ public class Simulation {
         history.add(currentState);
     }
 
+    /**
+     * Step through the simulation by one step of the given step-size. <br>
+     * The state of the system is updated and added to the history.
+     */
     public void step() {
         currentState = solver.nextStep(
                 f,
@@ -65,7 +85,7 @@ public class Simulation {
                 stepSize,
                 currentState.getTime());
         history.add(currentState);
-        System.out.println(currentState);
+        if (LOG) System.out.println(currentState);
     }
 
     public StateSystem getCurrentState() {

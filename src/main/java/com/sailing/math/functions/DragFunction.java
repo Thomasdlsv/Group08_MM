@@ -7,14 +7,14 @@ import com.sailing.math.physics.Coefficients;
 import com.sailing.math.physics.Constants;
 
 /**
- * D = 1/2 * p * C(beta) * V^2 * S
- * Where:
- * D = drag
- * p = air density
- * C(beta) = drag coefficient in respect to beta
- * beta = angle of attack
- * V = apparent wind speed
- * S = sail area
+ * D = 1/2 * p * C(beta) * V^2 * S                      <br>
+ * Where:                                               <br>
+ * D = drag                                             <br>
+ * p = air density                                      <br>
+ * C(beta) = drag coefficient in respect to beta        <br>
+ * beta = angle of attack                               <br>
+ * V = apparent wind speed                              <br>
+ * S = sail area                                        <br>
  * ==> roh * (m/s)^2 * m^2 = (kg/m^3) * (m/s)^2 * m^2 = (kg * m^2 * m^2) / (m^3 * s^2) = kg * m / s^2 = N
  */
 public class DragFunction implements Function {
@@ -32,15 +32,14 @@ public class DragFunction implements Function {
         Vector2D windVelocity = new Vector2D(v2.getValue(0), v2.getValue(1));
         Vector2D boatVelocity = new Vector2D(v2.getValue(2), v2.getValue(3));
         Vector2D apparentWind = windVelocity.subtract(boatVelocity);
-
         double v = apparentWind.getLength();
         double beta = Math.toDegrees(apparentWind.toPolar().getX2()) + (v1.getValue(2) + v1.getValue(3));
         if (beta < 0) beta += 360;
         double p = Constants.AIR_DENSITY;
-        double C = Coefficients.calculateDragCoefficient(beta);
+        double Cd = Coefficients.calculateDragCoefficient(beta);
         double s = Constants.SAIL_AREA;
 
-        double drag = 0.5 * p * C * Math.pow(v, 2) * s;
+        double drag = 0.5 * p * Cd * Math.pow(v, 2) * s;
         Vector dragDirection = apparentWind.normalize();
         return dragDirection.multiplyByScalar(drag);
     };
