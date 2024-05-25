@@ -3,6 +3,8 @@ package com.sailing.experiments.windtunnel;
 import com.sailing.math.data_structures.Vector;
 import com.sailing.math.functions.DragFunction;
 import com.sailing.math.functions.LiftFunction;
+import com.sailing.math.physics.Coefficients;
+import com.sailing.math.physics.Coefficients.ReynoldsNumber;
 import com.sailing.math.physics.Constants;
 
 import java.io.BufferedReader;
@@ -24,11 +26,13 @@ public class WindTunnelExperiment {
         Constants.SAIL_AREA = 0.3 * 0.0575; // 300 mm x 57.5 mm
 
         String path = "src/main/java/com/sailing/experiments/windtunnel/results/";
-        FileWriter writer = new FileWriter(path + "wind_tunnel.csv");
+        FileWriter writer = new FileWriter(path + "wind_tunnel_data_50K_calc_40K.csv");
         writer.append("Angle,Wind_Speed,Lift_Calculated,Drag_Calculated,Lift_Data,Drag_Data\n");
 
-        ArrayList<ArrayList<Double>> data = readCSVData("src/main/java/com/sailing/experiments/windtunnel/data_reduced.csv", true);
+        ArrayList<ArrayList<Double>> data = readCSVData("src/main/java/com/sailing/experiments/windtunnel/data_reduced_RE_50K.csv", true);
         System.out.println(data.size());
+
+        Coefficients.reynoldsNumber = ReynoldsNumber.RE40K;
 
         for (int i = 0; i < data.size(); i += 1) {
             double liftData = data.get(i).get(0);
