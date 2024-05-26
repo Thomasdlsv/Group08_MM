@@ -44,7 +44,7 @@ class WindTunnel extends Pane {
         getChildren().addAll(sailboat);
 
         Vector position = new Vector(0, 0, -90, 0);
-        Vector velocity = new Vector(0, 1, 0, 0);
+        Vector velocity = new Vector(1, 1, 0, 0);
         Vector acceleration = new Vector(0, 0);
         double mass = 100;
         double time = 0;
@@ -53,7 +53,9 @@ class WindTunnel extends Pane {
 
         simulation = new Simulation(solver, stateSystem, 1);
 
-        getChildren().addAll(accelerationArrow, dragForceArrow, liftForceArrow, velocityArrow, windVelocityArrow, windForceArrow, apparentWindArrow);
+        getChildren().addAll(accelerationArrow, dragForceArrow, liftForceArrow,
+                // velocityArrow, // TODO: reactivate this line to show the boat's velocity
+                windVelocityArrow, windForceArrow, apparentWindArrow);
         drawArrows(simulation.getCurrentState());
         drawForceArrow(simulation.getCurrentState());
 
@@ -84,7 +86,7 @@ class WindTunnel extends Pane {
                     sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
                 }
                 case SPACE -> {
-                    simulation.step();
+                    // simulation.step(); // TODO: reactivate this line for the next phase
                     drawArrows(simulation.getCurrentState());
                 }
            }
@@ -114,7 +116,7 @@ class WindTunnel extends Pane {
         Vector2D accelerationVector = new Vector2D(acceleration.getValue(0), acceleration.getValue(1));
         Vector2D windForceVector = new Vector2D(windForce.getValue(0), windForce.getValue(1));
 
-        double scalar = 500;
+        double scalar = 900;
 
         double radius = sailboat.getSail().getHeight() / 4;
 
@@ -143,7 +145,7 @@ class WindTunnel extends Pane {
         Vector2D acceleration = new Vector2D(currentState.getAcceleration().getValue(0), currentState.getAcceleration().getValue(1));
         Vector2D apparentWind = wind.subtract(boat);
 
-        double scalar = 50;
+        double scalar = 90;
 
         windVelocityArrow.setLengthAndAngle(wind.getLength() * scalar, wind.toPolar().getX2());
         accelerationArrow.setLengthAndAngle(acceleration.toPolar().getX1() * scalar, acceleration.toPolar().getX2());
@@ -165,7 +167,6 @@ class WindTunnel extends Pane {
         } else {
             sailboat.getSail().getSailIV().setScaleX(1);
         }
-
     }
 
     public SailboatGUI getSailboat() {
