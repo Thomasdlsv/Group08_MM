@@ -44,7 +44,7 @@ class WindTunnel extends Pane {
         getChildren().addAll(sailboat);
 
         Vector position = new Vector(0, 0, -90, 0);
-        Vector velocity = new Vector(1, 1, 0, 0);
+        Vector velocity = new Vector(0, 1, 0, 0).normalize();
         Vector acceleration = new Vector(0, 0);
         double mass = 100;
         double time = 0;
