@@ -33,8 +33,8 @@ public class DragFunction implements Function {
         Vector2D boatVelocity = new Vector2D(v2.getValue(2), v2.getValue(3));
         Vector2D apparentWind = windVelocity.subtract(boatVelocity);
         double v = apparentWind.getLength();
-        double beta = Math.toDegrees(apparentWind.toPolar().getX2()) + (v1.getValue(2) + v1.getValue(3));
-        if (beta < 0) beta += 360;
+        double beta = Math.toDegrees(apparentWind.toPolar().getX2()) - ((v1.getValue(2) + v1.getValue(3)));
+        beta = (beta + 360*3) % 360;
         double p = Constants.AIR_DENSITY;
         double Cd = Coefficients.calculateDragCoefficient(beta);
         double s = Constants.SAIL_AREA;

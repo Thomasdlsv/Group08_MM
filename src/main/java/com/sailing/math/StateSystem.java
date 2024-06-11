@@ -1,6 +1,7 @@
 package com.sailing.math;
 
 import com.sailing.math.data_structures.Vector;
+import com.sailing.math.data_structures.Vector2D;
 
 /**
  * StateSystem represents the state of the system at a given time.
@@ -33,6 +34,14 @@ public class StateSystem {
 
     public Vector getVelocity() {
         return velocity;
+    }
+
+    public Vector2D getWindVelocity() {
+        return new Vector2D(velocity.getValue(0), velocity.getValue(1));
+    }
+
+    public Vector2D getBoatVelocity() {
+        return new Vector2D(velocity.getValue(2), velocity.getValue(3));
     }
 
     public double getMass() {
