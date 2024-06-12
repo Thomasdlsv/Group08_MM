@@ -8,21 +8,26 @@ from weather import *
 boat = Boat()
 list = boat.setupWeather()
 weatherCall = Wind(list[0], list[1], list[2])
-fiels = [
-    "MMSI",
-    "Date",
-    "Time",
-    "LAT",
-    "LON",
-    "SOG",
-    "COG",
-    "Length",
-    "Width",
-    "WindSpeed",
-    "WindDirection",
-]
+# fiels = [
+#     "MMSI",
+#     "Date",
+#     "Time",
+#     "LAT",
+#     "LON",
+#     "SOG",
+#     "COG",
+#     "Length",
+#     "Width",
+#     "WindSpeed",
+#     "WindDirection",
+# ]
+
+boat.plott()
 boat = boat.boatPR()
-sboat = boat[["MMSI", "BaseDateTime", "LAT", "LON", "SOG", "COG", "Length", "Width"]]
+print(boat.head)
+sboat = boat[
+    ["MMSI", "BaseDateTime", "LAT", "LON", "SOG", "COG", "Length", "Width", "Draft"]
+]
 sboat.reset_index(inplace=True)
 sboat["BaseDateTime"] = [pd.Timestamp(x) for x in sboat["BaseDateTime"]]
 sboat = sboat.drop("index", axis=1)
@@ -40,5 +45,5 @@ for index, row in sboat.iterrows():
 sboat["wind_speed"] = windSpeed
 sboat["wind_direction"] = windDir
 sboat = sboat.drop("Hour", axis=1)
-# sboat.to_csv('firstBoat.csv')
+sboat.to_csv("datasets/firstBoat.csv")
 print(sboat)

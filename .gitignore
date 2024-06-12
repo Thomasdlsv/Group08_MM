@@ -11,3 +11,6 @@ ideas.txt
 build
 /bin/
 /.settings/
+
+# Ignore Datasets
+/sailingPython/datasets/
