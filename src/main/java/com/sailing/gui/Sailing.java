@@ -10,6 +10,9 @@ import javafx.stage.Stage;
  */
 public class Sailing extends Application {
 
+//    public static final double WIDTH = 1920;
+//    public static final double HEIGHT = 1080;
+
     public static final double WIDTH = 1280;
     public static final double HEIGHT = 800;
 

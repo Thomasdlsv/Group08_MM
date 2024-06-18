@@ -9,6 +9,7 @@ import com.sailing.math.functions.LiftFunction;
 import com.sailing.math.functions.WindForceAccelerationFunction;
 import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -26,6 +27,10 @@ class WindTunnel extends Pane {
     private final SailboatGUI sailboat;
 
     private final Simulation simulation;
+
+    // for dragging
+    private double startX;
+    private double startY;
 
     LabelArrow windVelocityArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.ALICEBLUE), "v", "tw");
     LabelArrow apparentWindArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.AQUA), "v", "aw");
@@ -52,15 +57,12 @@ class WindTunnel extends Pane {
                 Legend.Force.ACCEL,
                 Legend.Force.VEL_AW,
                 Legend.Force.VEL_TW);
-        legend.setLayoutX(30);
-        legend.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * 30);
+        legend.setLayoutX(50);
+        int legendScale = 60;
+        legend.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * legendScale + 50);
+        makeYDraggable(legend);
+        getChildren().add(legend);
 
-        ImageView paper = new ImageView(Images.paper);
-        paper.setLayoutX(-5);
-        paper.setPreserveRatio(true);
-        paper.setFitHeight(legend.getChildren().size() * 40);
-        paper.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * 35);
-        getChildren().addAll(paper, legend);
 
         Vector position = new Vector(0, 0, -90, 0);
         Vector velocity = new Vector(0, 1, 0, 0).normalize();
@@ -188,5 +190,14 @@ class WindTunnel extends Pane {
 
     public SailboatGUI getSailboat() {
         return sailboat;
+    }
+
+    void makeYDraggable(Node node) {
+        node.setOnMouseEntered(e -> {
+            startY = e.getSceneY() - node.getTranslateY();
+        });
+        node.setOnMouseDragged(e -> {
+            node.setTranslateY(e.getSceneY() - startY);
+        });
     }
 }
