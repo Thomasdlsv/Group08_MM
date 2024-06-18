@@ -8,22 +8,35 @@ class Boat:
 
     def __init__(self):
         df = pd.read_csv("datasets/AIS_2020_03_03.csv")
-        print(df.columns)
         df = df.drop("VesselName", axis=1)
         df = df.drop("CallSign", axis=1)
         df = df.drop("TransceiverClass", axis=1)
-
         # MMSI, BaseDateTime, LAT, LON, SOG, COG, Heading, IMO,VesselType, Status, Length, Width, Draft, Cargo
         # website = "https://www.vesselfinder.com/vessels/details/"
         sailingBoats = df[df["VesselType"] == 36]
         sailingBoats = sailingBoats[sailingBoats["SOG"] > 0]
-
         list_of_Boats = self.create_list_boats(sailingBoats)
         random_boat = randint(0, len(list_of_Boats))
         random_boat = list_of_Boats[random_boat]
         random_boat = 338352571
         self.boat = df[df["MMSI"] == random_boat]
-        print("MMSI is:" + str(self.boat.iloc[0]["MMSI"]))
+        print(self.boat)
+
+    def customBoat(self):
+        df = pd.read_csv("datasets/best.csv")
+        fields = [
+            "timestamp",
+            "position_lat",
+            "position_long",
+            "distance",
+            "enhanced_speed",
+        ]
+        df = df[fields]
+        # TODO
+        # add mmsi
+        # rename colums
+        # change timestamp
+        print(df)
 
     def plott(self):
         color_scale = [(0, "orange"), (1, "red")]
@@ -62,3 +75,7 @@ class Boat:
 
     def boatPR(self):
         return self.boat
+
+
+boat = Boat()
+boat.customBoat()
