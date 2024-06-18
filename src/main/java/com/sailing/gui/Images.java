@@ -18,4 +18,7 @@ abstract class Images {
 
     static final Image background = new Image("/background.png");
 
+    static final Image paper = new Image("/paper.png");
+
+
 }

@@ -50,6 +50,7 @@ public class Legend extends Group {
             offset += 1;
         }
 
+        setStyle("-fx-font-size: 10pt");
     }
 
     private TextFlow format(String label, String subscript, String definition, Color color, double offset) {

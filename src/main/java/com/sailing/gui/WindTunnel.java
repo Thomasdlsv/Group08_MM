@@ -9,6 +9,7 @@ import com.sailing.math.functions.LiftFunction;
 import com.sailing.math.functions.WindForceAccelerationFunction;
 import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
@@ -51,9 +52,15 @@ class WindTunnel extends Pane {
                 Legend.Force.ACCEL,
                 Legend.Force.VEL_AW,
                 Legend.Force.VEL_TW);
-        legend.setLayoutX(10);
+        legend.setLayoutX(30);
         legend.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * 30);
-        getChildren().add(legend);
+
+        ImageView paper = new ImageView(Images.paper);
+        paper.setLayoutX(-5);
+        paper.setPreserveRatio(true);
+        paper.setFitHeight(legend.getChildren().size() * 40);
+        paper.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * 35);
+        getChildren().addAll(paper, legend);
 
         Vector position = new Vector(0, 0, -90, 0);
         Vector velocity = new Vector(0, 1, 0, 0).normalize();
