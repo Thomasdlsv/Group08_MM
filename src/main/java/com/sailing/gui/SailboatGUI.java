@@ -4,6 +4,7 @@ import com.sailing.Sailboat;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 
@@ -63,7 +64,9 @@ class SailboatGUI extends Group {
         boatIV.setLayoutY(Sailing.Y_CENTER - boatIV.getBoundsInLocal().getHeight() / 2);
 
         Line bearing = new Line(Sailing.X_CENTER, Sailing.WIDTH * 1.41 , Sailing.X_CENTER, -Sailing.WIDTH + 1.41);
+        bearing.setStroke(Color.LIGHTGRAY);
         Line abeam = new Line(-Sailing.WIDTH * 1.41, Sailing.Y_CENTER, Sailing.WIDTH * 1.41, Sailing.Y_CENTER);
+        abeam.setStroke(Color.LIGHTGRAY);
 
         sail.setLayoutX(Sailing.X_CENTER - sail.getBoundsInLocal().getWidth() / 2);
         sail.setLayoutY(Sailing.Y_CENTER - boatIV.getBoundsInLocal().getHeight() / 4);
@@ -71,7 +74,7 @@ class SailboatGUI extends Group {
         sail.setPivotPoint(sail.getBoundsInLocal().getWidth() / 2, 0);
 
         getTransforms().add(r);
-        getChildren().addAll(boatIV, bearing, abeam, sail);
+        getChildren().addAll(bearing, abeam, sail, boatIV);
     }
 
     void rotate(double angle) {

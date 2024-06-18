@@ -12,6 +12,7 @@ import com.sailing.math.solver.Solver;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Scale;
 
 /**
@@ -42,6 +43,15 @@ class WindTunnel extends Pane {
         setHeight(Sailing.HEIGHT);
 
         getChildren().addAll(sailboat);
+        Legend legend = new Legend(Legend.Force.LIFT,
+                Legend.Force.DRAG,
+                Legend.Force.AERO,
+                Legend.Force.ACCEL,
+                Legend.Force.VEL_AW,
+                Legend.Force.VEL_TW);
+        legend.setLayoutX(10);
+        legend.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * 30);
+        getChildren().add(legend);
 
         Vector position = new Vector(0, 0, -90, 0);
         Vector velocity = new Vector(0, 1, 0, 0).normalize();
@@ -59,11 +69,11 @@ class WindTunnel extends Pane {
         drawArrows(simulation.getCurrentState());
         drawForceArrow(simulation.getCurrentState());
 
-        Text windLabel = new Text("Wind");
-        windLabel.setFill(Color.ALICEBLUE);
-        windLabel.setX(120);
-        windLabel.setY(90);
-        getChildren().add(windLabel);
+//        Text windLabel = new Text("Wind");
+//        windLabel.setFill(Color.ALICEBLUE);
+//        windLabel.setX(80);
+//        windLabel.setY(90);
+//        getChildren().add(windLabel);
         sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
         sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
 
