@@ -16,4 +16,6 @@ abstract class Images {
             Sailing.HEIGHT * SCALE * 0.6,
             true, false);
 
+    static final Image background = new Image("/background.png");
+
 }

@@ -74,7 +74,7 @@ class SailboatGUI extends Group {
         sail.setPivotPoint(sail.getBoundsInLocal().getWidth() / 2, 0);
 
         getTransforms().add(r);
-        getChildren().addAll(bearing, abeam, sail, boatIV);
+        getChildren().addAll(bearing, abeam, boatIV, sail);
     }
 
     void rotate(double angle) {

@@ -9,6 +9,8 @@ import com.sailing.math.functions.LiftFunction;
 import com.sailing.math.functions.WindForceAccelerationFunction;
 import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -35,7 +37,7 @@ class WindTunnel extends Pane {
 
     WindTunnel(SailboatGUI boat) {
         this.sailboat = boat;
-        setStyle("-fx-background-color: grey;");
+        setBackground(new Background(new BackgroundImage(Images.background, null, null, null, null)));
 
         // styling
         getStylesheets().add("/styling.css");
