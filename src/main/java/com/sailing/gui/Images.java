@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 
 abstract class Images {
 
-    public static double SCALE = 0.4;
+    public static double SCALE = 0.3;
 
     static final Image boat = new Image("/boat.png",
             Sailing.WIDTH * SCALE,
@@ -15,5 +15,10 @@ abstract class Images {
             Sailing.WIDTH * SCALE * 0.6,
             Sailing.HEIGHT * SCALE * 0.6,
             true, false);
+
+    static final Image background = new Image("/background.png");
+
+    static final Image paper = new Image("/paper.png");
+
 
 }
