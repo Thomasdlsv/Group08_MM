@@ -7,17 +7,17 @@ import com.sailing.math.physics.Coefficients;
 import com.sailing.math.physics.Constants;
 
 /**
- * D = 1/2 * p * C(beta) * V^2 * S                      <br>
+ * L = 1/2 * p * C(beta) * V^2 * S                      <br>
  * Where:                                               <br>
- * D = drag                                             <br>
- * p = air density                                      <br>
- * C(beta) = drag coefficient in respect to beta        <br>
+ * L = lift                                             <br>
+ * p = water density                                    <br>
+ * C(beta) = lift coefficient in respect to beta        <br>
  * beta = angle of attack                               <br>
- * V = apparent wind speed                              <br>
- * S = sail area                                        <br>
+ * V = boat velocity                                    <br>
+ * S = centerboard ar                                   <br>
  * ==> roh * (m/s)^2 * m^2 = (kg/m^3) * (m/s)^2 * m^2 = (kg * m^2 * m^2) / (m^3 * s^2) = kg * m / s^2 = N
  */
-public class DragFunction implements Function {
+public class WaterLiftFunction implements Function {
 
     /**
      *
@@ -26,22 +26,23 @@ public class DragFunction implements Function {
      * @param m mass. (ignored in this function)
      * @param h step size. (ignored in this function)
      * @param t time. (ignored in this function)
-     * @return Vector with the drag force in Newtons.
+     * @return Vector with the lift force in Newtons.
      */
     public Vector eval(Vector v1, Vector v2, double m, double h, double t) {
-        Vector2D windVelocity = new Vector2D(v2.getValue(0), v2.getValue(1));
         Vector2D boatVelocity = new Vector2D(v2.getValue(2), v2.getValue(3));
-        Vector2D apparentWind = windVelocity.subtract(boatVelocity);
-        double v = apparentWind.getLength();
-        double beta = Math.toDegrees(apparentWind.toPolar().getX2()) - ((v1.getValue(2) + v1.getValue(3)));
-        beta = (beta + 360*3) % 360;
-        double p = Constants.AIR_DENSITY;
-        double Cd = Coefficients.calculateDragCoefficient(beta);
-        double s = Constants.SAIL_AREA;
+        Vector2D waterFlow = boatVelocity.multiplyByScalar(-1);
 
-        double drag = 0.5 * p * Cd * Math.pow(v, 2) * s;
-        Vector dragDirection = apparentWind.normalize();
-        return dragDirection.multiplyByScalar(drag);
+        double v = waterFlow.getLength();
+        double beta = Math.toDegrees(waterFlow.toPolar().getX2()) - ((v1.getValue(2)));
+        beta = (beta + 360*3) % 360;
+        double p = Constants.WATER_DENSITY;
+        double Cl = Coefficients.calculateLiftCoefficientWater(beta);
+        double s = Constants.HULL_AREA;
+
+        double lift = 0.05 * p * Cl * Math.pow(v, 2) * s;
+        Vector liftDirection = (lift != 0) ? waterFlow.rotate(90).normalize() : new Vector2D(0, 0);
+
+        return liftDirection.multiplyByScalar(lift);
     };
 
     public Vector eval(StateSystem stateSystem, double h) {

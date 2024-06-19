@@ -1,8 +1,8 @@
 package com.sailing.experiments.windtunnel;
 
 import com.sailing.math.data_structures.Vector;
-import com.sailing.math.functions.DragFunction;
-import com.sailing.math.functions.LiftFunction;
+import com.sailing.math.functions.WindDragFunction;
+import com.sailing.math.functions.WindLiftFunction;
 import com.sailing.math.physics.Coefficients;
 import com.sailing.math.physics.Coefficients.ReynoldsNumber;
 import com.sailing.math.physics.Constants;
@@ -42,8 +42,8 @@ public class WindTunnelExperiment {
 
             Vector position = new Vector(0, 0, 0, angle);
             Vector velocity = new Vector(windSpeed, 0, 0, 0);
-            double liftCalculated = - new LiftFunction().eval(position, velocity, 1, 1, 0).getValue(1);
-            double dragCalculated = new DragFunction().eval(position, velocity,1, 1, 0).getValue(0);
+            double liftCalculated = - new WindLiftFunction().eval(position, velocity, 1, 1, 0).getValue(1);
+            double dragCalculated = new WindDragFunction().eval(position, velocity,1, 1, 0).getValue(0);
             writer.append(angle + "," + windSpeed + "," + liftCalculated + "," + dragCalculated + "," + liftData + "," + dragData + "\n");
         }
 

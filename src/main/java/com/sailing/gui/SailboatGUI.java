@@ -1,6 +1,7 @@
 package com.sailing.gui;
 
 import com.sailing.Sailboat;
+import com.sailing.math.data_structures.Vector2D;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -76,6 +77,11 @@ class SailboatGUI extends Group {
 
     void rotate(double angle) {
         r.setAngle(angle + 90);
+    }
+
+    public void setPosition(Vector2D position) {
+        setTranslateX(position.getX1() * 10);
+        setTranslateY(position.getX2() * 10);
     }
 
     Sailboat getBoat() {

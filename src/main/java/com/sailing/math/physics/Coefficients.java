@@ -9,12 +9,12 @@ public class Coefficients {
     public static ReynoldsNumber reynoldsNumber = ReynoldsNumber.RE360K;
 
     /**
-     * This method is used to calculate the lift coefficient.
+     * This method is used to calculate the lift coefficient for the wind forces.
      * The coefficients of the polynomials were calculated using NumPy's polyfit() method.
      * @param angleOfAttack angle of attack in degrees.
      * @return lift coefficient.
      */
-    public static double calculateLiftCoefficient(double angleOfAttack) {
+    public static double calculateLiftCoefficientWind(double angleOfAttack) {
         return switch (reynoldsNumber) {
             case RE40K -> cl40K(angleOfAttack);
             case RE80K -> cl80K(angleOfAttack);
@@ -24,14 +24,15 @@ public class Coefficients {
     }
 
     /**
-     * This method is used to calculate the drag coefficient.
+     * This method is used to calculate the drag coefficient for the wind forces.
      * The coefficients of the polynomials were calculated using NumPy's polyfit() method.
      * @param angleOfAttack angle of attack in degrees.
      * @return drag coefficient.
      */
-    public static double calculateDragCoefficient(double angleOfAttack) {
+    public static double calculateDragCoefficientWind(double angleOfAttack) {
         double x = angleOfAttack % 180;
-        return  - 2.34883452212131e-20  * Math.pow(x, 10)
+        return  Math.max(0,
+                - 2.34883452212131e-20  * Math.pow(x, 10)
                 + 1.16915339371553e-17  * Math.pow(x, 9)
                 - 7.19105243730552e-16  * Math.pow(x, 8)
                 - 6.78303608765851e-13  * Math.pow(x, 7)
@@ -41,7 +42,7 @@ public class Coefficients {
                 - 9.01804243068557e-05  * Math.pow(x, 3)
                 + 0.00275939330472374   * Math.pow(x, 2)
                 - 0.0180052597286692    * Math.pow(x, 1)
-                + 0.0230541325838875;
+                + 0.0230541325838875);
     }
 
     /**
@@ -130,5 +131,43 @@ public class Coefficients {
                 - 5.65701593e-02 * Math.pow(x, 2)
                 + 2.41847930e-01 * Math.pow(x, 1)
                 + 6.87196997e-03;
+    }
+
+    /**
+     * This method is used to calculate the drag coefficient for the water forces.
+     * The coefficients of the polynomials were calculated using NumPy's polyfit() method.
+     * @param x angle of attack in degrees.
+     * @return drag coefficient.
+     */
+    public static double calculateDragCoefficientWater(double x) {
+        x = Math.abs(x - 180);
+        return  Math.max(0,
+                          2.75310002e-14   * Math.pow(x, 7)
+                        - 1.98659092e-11    * Math.pow(x, 6)
+                        + 5.52639998e-09  * Math.pow(x, 5)
+                        - 7.27478099e-07    * Math.pow(x, 4)
+                        + 4.36445232e-05   * Math.pow(x, 3)
+                        - 8.95332536e-04    * Math.pow(x, 2)
+                        + 9.62651401e-03  * Math.pow(x, 1)
+                        + 1.01516496e-01);
+    }
+
+    /**
+     * This method is used to calculate the lift coefficient for the water forces.
+     * The coefficients of the polynomials were calculated using NumPy's polyfit() method.
+     * @param x angle of attack in degrees.
+     * @return lift coefficient.
+     */
+    public static double calculateLiftCoefficientWater(double x) {
+        x = Math.abs(x - 180);
+        double direction = (x-180 <= 0) ? 1 : -1;
+        return (- 6.85204835e-15  * Math.pow(x, 7)
+                + 2.81199867e-12  * Math.pow(x, 6)
+                - 1.63577106e-10  * Math.pow(x, 5)
+                - 9.31434523e-08  * Math.pow(x, 4)
+                + 2.07385386e-05  * Math.pow(x, 3)
+                - 1.69377627e-03  * Math.pow(x, 2)
+                + 4.95875286e-02  * Math.pow(x, 1)
+                + 8.05679732e-15) * direction;
     }
 }

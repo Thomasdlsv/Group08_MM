@@ -7,17 +7,17 @@ import com.sailing.math.physics.Coefficients;
 import com.sailing.math.physics.Constants;
 
 /**
- * L = 1/2 * p * C(beta) * V^2 * S                      <br>
+ * D = 1/2 * p * C(beta) * V^2 * S                      <br>
  * Where:                                               <br>
- * L = lift                                             <br>
+ * D = drag                                             <br>
  * p = air density                                      <br>
- * C(beta) = lift coefficient in respect to beta        <br>
+ * C(beta) = drag coefficient in respect to beta        <br>
  * beta = angle of attack                               <br>
  * V = apparent wind speed                              <br>
  * S = sail area                                        <br>
  * ==> roh * (m/s)^2 * m^2 = (kg/m^3) * (m/s)^2 * m^2 = (kg * m^2 * m^2) / (m^3 * s^2) = kg * m / s^2 = N
  */
-public class LiftFunction implements Function {
+public class WindDragFunction implements Function {
 
     /**
      *
@@ -26,7 +26,7 @@ public class LiftFunction implements Function {
      * @param m mass. (ignored in this function)
      * @param h step size. (ignored in this function)
      * @param t time. (ignored in this function)
-     * @return Vector with the lift force in Newtons.
+     * @return Vector with the drag force in Newtons.
      */
     public Vector eval(Vector v1, Vector v2, double m, double h, double t) {
         Vector2D windVelocity = new Vector2D(v2.getValue(0), v2.getValue(1));
@@ -36,12 +36,12 @@ public class LiftFunction implements Function {
         double beta = Math.toDegrees(apparentWind.toPolar().getX2()) - ((v1.getValue(2) + v1.getValue(3)));
         beta = (beta + 360*3) % 360;
         double p = Constants.AIR_DENSITY;
-        double Cl = Coefficients.calculateLiftCoefficient(beta);
+        double Cd = Coefficients.calculateDragCoefficientWind(beta);
         double s = Constants.SAIL_AREA;
 
-        double lift = 0.5 * p * Cl * Math.pow(v, 2) * s;
-        Vector liftDirection = apparentWind.rotate(90).normalize();
-        return liftDirection.multiplyByScalar(lift);
+        double drag = 0.5 * p * Cd * Math.pow(v, 2) * s;
+        Vector dragDirection = apparentWind.normalize();
+        return dragDirection.multiplyByScalar(drag);
     };
 
     public Vector eval(StateSystem stateSystem, double h) {

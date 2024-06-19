@@ -119,6 +119,9 @@ public class Vector {
      */
     public Vector normalize() {
         double length = getLength();
+        if (length == 0) {
+            throw new ArithmeticException("Cannot normalize a vector with length 0.");
+        }
         Vector result = new Vector();
         for (double value : values) {
             result.values.add(value / length);

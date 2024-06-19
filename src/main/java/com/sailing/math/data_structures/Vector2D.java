@@ -71,4 +71,11 @@ public class Vector2D extends Vector {
         }
         return subtract(v.toCartesian());
     }
+
+    public Vector2D multiplyByScalar(double scalar) {
+        if (POLAR) {
+            return new Vector2D(getX1() * scalar, getX2(), true);
+        }
+        return new Vector2D(getX1() * scalar, getX2() * scalar);
+    }
 }

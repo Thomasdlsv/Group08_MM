@@ -3,7 +3,7 @@ package com.sailing;
 import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector;
 import com.sailing.math.functions.Function;
-import com.sailing.math.functions.WindForceAccelerationFunction;
+import com.sailing.math.functions.WindWaterForceAccelerationFunction;
 import com.sailing.math.solver.Solver;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class Simulation {
     ArrayList<StateSystem> history;
     StateSystem currentState;
     double stepSize;
-    Function f = new WindForceAccelerationFunction();
+    Function f = new WindWaterForceAccelerationFunction();
 
     public static boolean LOG = false; // Set to true to log the state of the system at each step
 

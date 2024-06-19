@@ -4,11 +4,13 @@ import com.sailing.Simulation;
 import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector;
 import com.sailing.math.data_structures.Vector2D;
-import com.sailing.math.functions.DragFunction;
-import com.sailing.math.functions.LiftFunction;
-import com.sailing.math.functions.WindForceAccelerationFunction;
+import com.sailing.math.functions.WaterDragFunction;
+import com.sailing.math.functions.WindDragFunction;
+import com.sailing.math.functions.WindLiftFunction;
+import com.sailing.math.functions.WindWaterForceAccelerationFunction;
 import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
+import javafx.animation.AnimationTimer;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -22,6 +24,8 @@ class WindTunnel extends Pane {
     private final SailboatGUI sailboat;
 
     private final Simulation simulation;
+
+    double windVelocity = 10;
 
     LabelArrow windVelocityArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.ALICEBLUE), "v", "tw");
     LabelArrow apparentWindArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.AQUA), "v", "aw");
@@ -44,17 +48,55 @@ class WindTunnel extends Pane {
         getChildren().addAll(sailboat);
 
         Vector position = new Vector(0, 0, -90, 0);
-        Vector velocity = new Vector(0, 1, 0, 0).normalize();
+        Vector velocity = new Vector(0, 1, 0, 0).normalize().multiplyByScalar(windVelocity);
         Vector acceleration = new Vector(0, 0);
         double mass = 100;
         double time = 0;
         StateSystem stateSystem = new StateSystem(position, velocity, acceleration, mass, time);
         Solver solver = new RungeKutta();
 
-        simulation = new Simulation(solver, stateSystem, 1);
+        simulation = new Simulation(solver, stateSystem, 0.01);
 
-        getChildren().addAll(accelerationArrow, dragForceArrow, liftForceArrow,
-                // velocityArrow, // TODO: reactivate this line to show the boat's velocity
+        Stats stats = new Stats();
+        stats.setTranslateX(10);
+        stats.setTranslateY(500);
+
+        final boolean[] running = {true};
+
+        AnimationTimer timer = new AnimationTimer() {
+            long last = 0;
+            long count = 0;
+
+            @Override
+            public void handle(long now) {
+                // execute 10 times per second
+                if (now - last >= 10_000_000) {
+                    if (running[0]) {
+                        simulation.run(1);
+                        drawArrows(simulation.getCurrentState());
+                        drawForceArrow(simulation.getCurrentState());
+                        repaintSail();
+                        stats.update(simulation.getCurrentState());
+                        count++;
+                        if (count % 100 == 0) {
+                            logState(simulation.getCurrentState());
+                        }
+                        boat.setPosition(new Vector2D(simulation.getCurrentState().getPosition().getValue(0), simulation.getCurrentState().getPosition().getValue(1)));
+                    }
+                    last = now;
+                }
+            }
+        };
+
+        timer.start();
+
+
+        getChildren().addAll(
+                stats,
+                accelerationArrow,
+                dragForceArrow,
+                liftForceArrow,
+                velocityArrow,
                 windVelocityArrow, windForceArrow, apparentWindArrow);
         drawArrows(simulation.getCurrentState());
         drawForceArrow(simulation.getCurrentState());
@@ -86,7 +128,10 @@ class WindTunnel extends Pane {
                     sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
                 }
                 case SPACE -> {
-                    // simulation.step(); // TODO: reactivate this line for the next phase
+                    running[0] = !running[0]; // pause
+                    // simulation.run(10);
+                    // simulation.step();
+                    logState(simulation.getCurrentState());
                     drawArrows(simulation.getCurrentState());
                 }
            }
@@ -106,49 +151,60 @@ class WindTunnel extends Pane {
 
     }
 
+    private void logState(StateSystem state) {
+        System.out.println("------");
+        System.out.println("Wind-Drag:  " + new WindDragFunction().eval(state, 1));
+        System.out.println("Wind-Lift:  " + new WindLiftFunction().eval(state, 1));
+        System.out.println("Water-Drag: " + new WaterDragFunction().eval(state, 1));
+        System.out.println("Acceleration: " + new WindWaterForceAccelerationFunction().eval(state, 1));
+
+        Vector wind = new Vector(state.getVelocity().getValue(0), state.getVelocity().getValue(1));
+        Vector boat = new Vector(state.getVelocity().getValue(2), state.getVelocity().getValue(3));
+        System.out.println("Wind speed: " + wind.getLength());
+        System.out.println("Boat speed: " + boat.getLength());
+    }
+
     private void drawForceArrow(StateSystem currentState) {
-        Vector drag = new DragFunction().eval(currentState, 1);
-        Vector lift = new LiftFunction().eval(currentState, 1);
-        Vector acceleration = new WindForceAccelerationFunction().eval(currentState, 1);
-        Vector windForce = new WindForceAccelerationFunction().calculateAcceleration(currentState, 1);
+        Vector drag = new WindDragFunction().eval(currentState, 1);
+        Vector lift = new WindLiftFunction().eval(currentState, 1);
+        Vector acceleration = new WindWaterForceAccelerationFunction().eval(currentState, 1);
+        Vector windForce = new WindWaterForceAccelerationFunction().calculateAccelerationWind(currentState, 1);
         Vector2D dragForceVector = new Vector2D(drag.getValue(0), drag.getValue(1));
         Vector2D liftForceVector = new Vector2D(lift.getValue(0), lift.getValue(1));
         Vector2D accelerationVector = new Vector2D(acceleration.getValue(0), acceleration.getValue(1));
         Vector2D windForceVector = new Vector2D(windForce.getValue(0), windForce.getValue(1));
 
-        double scalar = 900;
-
-        double radius = sailboat.getSail().getHeight() / 4;
-
         double xStart = (sailboat.getSail().localToScene(sailboat.getSail().getBoundsInLocal()).getCenterX());
-
         double yStart = (sailboat.getSail().localToScene(sailboat.getSail().getBoundsInLocal()).getCenterY());
+        double scalar = 100 / windVelocity;
 
+        double dragScalar = dragForceVector.getLength() * (1d/currentState.getMass());
+        double liftScalar = liftForceVector.getLength() * (1d/currentState.getMass());
+        double accelerationScalar = accelerationVector.getLength();
+        double windScalar = windForceVector.getLength();
 
         dragForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
-                dragForceVector.getLength() * scalar * (1d/currentState.getMass()),
+                dragScalar * scalar,
                 dragForceVector.toPolar().getX2());
         liftForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
-                liftForceVector.getLength() * scalar * (1d/currentState.getMass()),
+                liftScalar * scalar,
                 liftForceVector.toPolar().getX2());
         accelerationArrow.setLengthAndAngle(
-                accelerationVector.getLength() * scalar,
+                accelerationScalar * scalar,
                 accelerationVector.toPolar().getX2());
         windForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
-                windForceVector.getLength() * scalar,
+                windScalar * scalar,
                 windForceVector.toPolar().getX2());
     }
 
     private void drawArrows(StateSystem currentState) {
         Vector2D wind = new Vector2D(currentState.getVelocity().getValue(0), currentState.getVelocity().getValue(1));
         Vector2D boat = new Vector2D(currentState.getVelocity().getValue(2), currentState.getVelocity().getValue(3));
-        Vector2D acceleration = new Vector2D(currentState.getAcceleration().getValue(0), currentState.getAcceleration().getValue(1));
         Vector2D apparentWind = wind.subtract(boat);
 
-        double scalar = 90;
+        double scalar = 9;
 
         windVelocityArrow.setLengthAndAngle(wind.getLength() * scalar, wind.toPolar().getX2());
-        accelerationArrow.setLengthAndAngle(acceleration.toPolar().getX1() * scalar, acceleration.toPolar().getX2());
         velocityArrow.setLengthAndAngle(boat.getLength() * scalar, boat.toPolar().getX2());
         apparentWindArrow.setLengthAndAngle(apparentWind.getLength() * scalar, apparentWind.toPolar().getX2());
     }
