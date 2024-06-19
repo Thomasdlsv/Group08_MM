@@ -26,7 +26,7 @@ public class Legend extends Group {
         ImageView paper = new ImageView(Images.paper);
         paper.setPreserveRatio(true);
         paper.setFitHeight(getChildren().size() * legendScale);
-        paper.setLayoutY(-45);
+        paper.setLayoutY(20);
         paper.setLayoutX(-50);
 
         getChildren().add(paper);
@@ -77,7 +77,7 @@ public class Legend extends Group {
        subscriptText.setTranslateY(8);
 
        TextFlow res = new TextFlow(labelText, subscriptText, definitionText);
-       res.setTranslateY(offset * 50);
+       res.setTranslateY(60 + (offset * 50));
 
        return res;
     }
