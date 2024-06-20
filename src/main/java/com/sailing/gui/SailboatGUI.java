@@ -1,11 +1,11 @@
 package com.sailing.gui;
 
 import com.sailing.Sailboat;
+import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector2D;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.transform.Rotate;
 
@@ -52,6 +52,7 @@ class SailboatGUI extends Group {
     private final Rotate r = new Rotate();
     private Sailboat boat;
     private SailGUI sail;
+    private ImageView boatIV;
 
     SailboatGUI(Sailboat boat, SailGUI sailGUI) {
         this.boat = boat;
@@ -60,14 +61,14 @@ class SailboatGUI extends Group {
         r.setPivotX(Sailing.X_CENTER);
         r.setPivotY(Sailing.Y_CENTER);
 
-        ImageView boatIV = new ImageView(Images.boat);
+        boatIV = new ImageView(Images.boat);
         boatIV.setLayoutX(Sailing.X_CENTER - boatIV.getBoundsInLocal().getWidth() / 2);
         boatIV.setLayoutY(Sailing.Y_CENTER - boatIV.getBoundsInLocal().getHeight() / 2);
 
-        Line bearing = new Line(Sailing.X_CENTER, Sailing.WIDTH * 1.41 , Sailing.X_CENTER, -Sailing.WIDTH + 1.41);
-        bearing.setStroke(Color.LIGHTGRAY);
-        Line abeam = new Line(-Sailing.WIDTH * 1.41, Sailing.Y_CENTER, Sailing.WIDTH * 1.41, Sailing.Y_CENTER);
-        abeam.setStroke(Color.LIGHTGRAY);
+        // Line bearing = new Line(Sailing.X_CENTER, Sailing.WIDTH * 1.41 , Sailing.X_CENTER, -Sailing.WIDTH + 1.41);
+        // bearing.setStroke(Color.LIGHTGRAY);
+        // Line abeam = new Line(-Sailing.WIDTH * 1.41, Sailing.Y_CENTER, Sailing.WIDTH * 1.41, Sailing.Y_CENTER);
+        // abeam.setStroke(Color.LIGHTGRAY);
 
         sail.setLayoutX(Sailing.X_CENTER - sail.getBoundsInLocal().getWidth() / 2);
         sail.setLayoutY(Sailing.Y_CENTER - boatIV.getBoundsInLocal().getHeight() / 4);
@@ -75,7 +76,7 @@ class SailboatGUI extends Group {
         sail.setPivotPoint(sail.getBoundsInLocal().getWidth() / 2, 0);
 
         getTransforms().add(r);
-        getChildren().addAll(bearing, abeam, boatIV, sail);
+        getChildren().addAll(boatIV, sail);
     }
 
     void rotate(double angle) {
@@ -87,8 +88,26 @@ class SailboatGUI extends Group {
         setTranslateY(position.getX2() * 10);
     }
 
+    public void repaintSail(StateSystem currentState) {
+        Vector2D windVelocity = currentState.getWindVelocity();
+        Vector2D boatVelocity = currentState.getBoatVelocity();
+        Vector2D apparentWind = windVelocity.subtract(boatVelocity);
+        double beta = Math.toDegrees(apparentWind.toPolar().getX2()) - ((currentState.getPosition().getValue(2) + currentState.getPosition().getValue(3)));
+        beta = (beta + 360*3) % 360;
+
+        if (beta > 0 && beta < 180) {
+            getSail().getSailIV().setScaleX(1);
+        } else {
+            getSail().getSailIV().setScaleX(-1);
+        }
+    }
+
     Sailboat getBoat() {
         return this.boat;
+    }
+
+    public ImageView getBoatIV() {
+        return boatIV;
     }
 
     public SailGUI getSail() {

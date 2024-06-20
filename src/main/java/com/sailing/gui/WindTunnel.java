@@ -4,10 +4,6 @@ import com.sailing.Simulation;
 import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector;
 import com.sailing.math.data_structures.Vector2D;
-import com.sailing.math.functions.WaterDragFunction;
-import com.sailing.math.functions.WindDragFunction;
-import com.sailing.math.functions.WindLiftFunction;
-import com.sailing.math.functions.WindWaterForceAccelerationFunction;
 import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
 import javafx.animation.AnimationTimer;
@@ -15,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
@@ -27,24 +22,18 @@ class WindTunnel extends Pane {
 
     private final Simulation simulation;
 
+    private final Arrows arrows;
+
     double windVelocity = 10;
 
     // for dragging
     private double startX;
     private double startY;
 
-    LabelArrow windVelocityArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.ALICEBLUE), "v", "tw");
-    LabelArrow apparentWindArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.AQUA), "v", "aw");
-    LabelArrow accelerationArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED), "a", "");
-    LabelArrow velocityArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.BLUE), "v", "");
-
-    LabelArrow dragForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.GREEN), "F", "D");
-    LabelArrow liftForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.YELLOW), "F", "L");
-    LabelArrow windForceArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.ORANGE), "F", "D+L");
-
     WindTunnel(SailboatGUI boat) {
         this.sailboat = boat;
         setBackground(new Background(new BackgroundImage(Images.background, null, null, null, null)));
+        arrows = new Arrows(boat);
 
         // styling
         getStylesheets().add("/styling.css");
@@ -91,13 +80,12 @@ class WindTunnel extends Pane {
                 if (now - last >= 10_000_000) {
                     if (running[0]) {
                         simulation.run(1);
-                        drawArrows(simulation.getCurrentState());
-                        drawForceArrow(simulation.getCurrentState());
-                        repaintSail();
+                        arrows.update(simulation.getCurrentState());
+                        boat.repaintSail(simulation.getCurrentState());
                         stats.update(simulation.getCurrentState());
                         count++;
                         if (count % 100 == 0) {
-                            logState(simulation.getCurrentState());
+                            simulation.getCurrentState().log();
                         }
                         boat.setPosition(new Vector2D(simulation.getCurrentState().getPosition().getValue(0), simulation.getCurrentState().getPosition().getValue(1)));
                     }
@@ -111,13 +99,8 @@ class WindTunnel extends Pane {
 
         getChildren().addAll(
                 stats,
-                accelerationArrow,
-                dragForceArrow,
-                liftForceArrow,
-                velocityArrow,
-                windVelocityArrow, windForceArrow, apparentWindArrow);
-        drawArrows(simulation.getCurrentState());
-        drawForceArrow(simulation.getCurrentState());
+                arrows);
+        arrows.update(simulation.getCurrentState());
 
 //        Text windLabel = new Text("Wind");
 //        windLabel.setFill(Color.ALICEBLUE);
@@ -149,12 +132,11 @@ class WindTunnel extends Pane {
                     running[0] = !running[0]; // pause
                     // simulation.run(10);
                     // simulation.step();
-                    logState(simulation.getCurrentState());
-                    drawArrows(simulation.getCurrentState());
+                    simulation.getCurrentState().log();
                 }
            }
-           repaintSail();
-           drawForceArrow(simulation.getCurrentState());
+           boat.repaintSail(simulation.getCurrentState());
+           arrows.update(simulation.getCurrentState());
        });
 
        Scale s = new Scale();
@@ -166,79 +148,6 @@ class WindTunnel extends Pane {
            s.setX(s.getX() + event.getDeltaY() / 500);
            s.setY(s.getY() + event.getDeltaY() / 500);
        });
-
-    }
-
-    private void logState(StateSystem state) {
-        System.out.println("------");
-        System.out.println("Wind-Drag:  " + new WindDragFunction().eval(state, 1));
-        System.out.println("Wind-Lift:  " + new WindLiftFunction().eval(state, 1));
-        System.out.println("Water-Drag: " + new WaterDragFunction().eval(state, 1));
-        System.out.println("Acceleration: " + new WindWaterForceAccelerationFunction().eval(state, 1));
-
-        Vector wind = new Vector(state.getVelocity().getValue(0), state.getVelocity().getValue(1));
-        Vector boat = new Vector(state.getVelocity().getValue(2), state.getVelocity().getValue(3));
-        System.out.println("Wind speed: " + wind.getLength());
-        System.out.println("Boat speed: " + boat.getLength());
-    }
-
-    private void drawForceArrow(StateSystem currentState) {
-        Vector drag = new WindDragFunction().eval(currentState, 1);
-        Vector lift = new WindLiftFunction().eval(currentState, 1);
-        Vector acceleration = new WindWaterForceAccelerationFunction().eval(currentState, 1);
-        Vector windForce = new WindWaterForceAccelerationFunction().calculateAccelerationWind(currentState, 1);
-        Vector2D dragForceVector = new Vector2D(drag.getValue(0), drag.getValue(1));
-        Vector2D liftForceVector = new Vector2D(lift.getValue(0), lift.getValue(1));
-        Vector2D accelerationVector = new Vector2D(acceleration.getValue(0), acceleration.getValue(1));
-        Vector2D windForceVector = new Vector2D(windForce.getValue(0), windForce.getValue(1));
-
-        double xStart = (sailboat.getSail().localToScene(sailboat.getSail().getBoundsInLocal()).getCenterX());
-        double yStart = (sailboat.getSail().localToScene(sailboat.getSail().getBoundsInLocal()).getCenterY());
-        double scalar = 100 / windVelocity;
-
-        double dragScalar = dragForceVector.getLength() * (1d/currentState.getMass());
-        double liftScalar = liftForceVector.getLength() * (1d/currentState.getMass());
-        double accelerationScalar = accelerationVector.getLength();
-        double windScalar = windForceVector.getLength();
-
-        dragForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
-                dragScalar * scalar,
-                dragForceVector.toPolar().getX2());
-        liftForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
-                liftScalar * scalar,
-                liftForceVector.toPolar().getX2());
-        accelerationArrow.setLengthAndAngle(
-                accelerationScalar * scalar,
-                accelerationVector.toPolar().getX2());
-        windForceArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart),
-                windScalar * scalar,
-                windForceVector.toPolar().getX2());
-    }
-
-    private void drawArrows(StateSystem currentState) {
-        Vector2D wind = new Vector2D(currentState.getVelocity().getValue(0), currentState.getVelocity().getValue(1));
-        Vector2D boat = new Vector2D(currentState.getVelocity().getValue(2), currentState.getVelocity().getValue(3));
-        Vector2D apparentWind = wind.subtract(boat);
-
-        double scalar = 9;
-
-        windVelocityArrow.setLengthAndAngle(wind.getLength() * scalar, wind.toPolar().getX2());
-        velocityArrow.setLengthAndAngle(boat.getLength() * scalar, boat.toPolar().getX2());
-        apparentWindArrow.setLengthAndAngle(apparentWind.getLength() * scalar, apparentWind.toPolar().getX2());
-    }
-
-    private void repaintSail() {
-        Vector2D windVelocity = simulation.getCurrentState().getWindVelocity();
-        Vector2D boatVelocity = simulation.getCurrentState().getBoatVelocity();
-        Vector2D apparentWind = windVelocity.subtract(boatVelocity);
-        double beta = Math.toDegrees(apparentWind.toPolar().getX2()) - ((simulation.getCurrentState().getPosition().getValue(2) + simulation.getCurrentState().getPosition().getValue(3)));
-        beta = (beta + 360*3) % 360;
-
-        if (beta > 0 && beta < 180) {
-           sailboat.getSail().getSailIV().setScaleX(1);
-        } else {
-            sailboat.getSail().getSailIV().setScaleX(-1);
-        }
     }
 
     public SailboatGUI getSailboat() {

@@ -2,6 +2,10 @@ package com.sailing.math;
 
 import com.sailing.math.data_structures.Vector;
 import com.sailing.math.data_structures.Vector2D;
+import com.sailing.math.functions.WaterDragFunction;
+import com.sailing.math.functions.WindDragFunction;
+import com.sailing.math.functions.WindLiftFunction;
+import com.sailing.math.functions.WindWaterForceAccelerationFunction;
 
 /**
  * StateSystem represents the state of the system at a given time.
@@ -58,6 +62,17 @@ public class StateSystem {
 
     public StateSystem copy() {
         return new StateSystem(position.copy(), velocity.copy(), acceleration.copy(), mass, time);
+    }
+
+    public void log() {
+        System.out.println("------");
+        System.out.println("Wind-Drag:    " + new WindDragFunction().eval(this, 1));
+        System.out.println("Wind-Lift:    " + new WindLiftFunction().eval(this, 1));
+        System.out.println("Water-Drag:   " + new WaterDragFunction().eval(this, 1));
+        System.out.println("Acceleration: " + new WindWaterForceAccelerationFunction().eval(this, 1));
+
+        System.out.println("Wind speed:   " + getWindVelocity().getLength());
+        System.out.println("Boat speed:   " + getBoatVelocity().getLength());
     }
 
     @Override
