@@ -60,9 +60,8 @@ class WindTunnel extends Pane {
         legend.setLayoutX(50);
         int legendScale = 60;
         legend.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * legendScale + 50);
-        makeYDraggable(legend);
+        makeDraggable(legend, false, true, null, new double[]{20, 340});
         getChildren().add(legend);
-
 
         Vector position = new Vector(0, 0, -90, 0);
         Vector velocity = new Vector(0, 1, 0, 0).normalize();
@@ -192,12 +191,56 @@ class WindTunnel extends Pane {
         return sailboat;
     }
 
-    void makeYDraggable(Node node) {
-        node.setOnMouseEntered(e -> {
-            startY = e.getSceneY() - node.getTranslateY();
-        });
-        node.setOnMouseDragged(e -> {
-            node.setTranslateY(e.getSceneY() - startY);
-        });
+
+    void makeDraggable(Node node, boolean x, boolean y, double[] xBounds, double[] yBounds) {
+        if (x && y) {
+
+            node.setOnMousePressed(e -> {
+                startY = e.getSceneY() - node.getTranslateY();
+                startX = e.getSceneX() - node.getTranslateX();
+            });
+            node.setOnMouseDragged(e -> {
+                node.setTranslateY(e.getSceneY() - startY);
+                node.setTranslateX(e.getSceneX() - startX);
+                if (xBounds != null) {
+                    if (node.getTranslateX() > xBounds[1]) node.setTranslateX(xBounds[1]);
+                    if (node.getTranslateX() < xBounds[0]) node.setTranslateX(xBounds[0]);
+                }
+                if (yBounds != null) {
+                    if (node.getTranslateY() > yBounds[1]) node.setTranslateY(yBounds[1]);
+                    if (node.getTranslateY() < yBounds[0]) node.setTranslateY(yBounds[0]);
+                }
+            });
+        } else if (x) {
+            node.setOnMousePressed(e -> {
+                    startX = e.getSceneX() - node.getTranslateX();
+            });
+
+            node.setOnMouseDragged(e -> {
+                node.setTranslateX(e.getSceneX() - startX);
+                    if (xBounds != null) {
+                        if (node.getTranslateX() > xBounds[1]) node.setTranslateX(xBounds[1]);
+                        if (node.getTranslateX() < xBounds[0]) node.setTranslateX(xBounds[0]);
+                    }
+            });
+
+        } else if (y) {
+            System.out.println("im here");
+            node.setOnMousePressed(e -> {
+                startY = e.getSceneY() - node.getTranslateY();
+                System.out.println(startY);
+            });
+
+            node.setOnMouseDragged(e -> {
+                node.setTranslateY(e.getSceneY() - startY);
+                if (yBounds != null) {
+                    if (node.getTranslateY() > yBounds[1]) node.setTranslateY(yBounds[1]);
+                    if (node.getTranslateY() < yBounds[0]) node.setTranslateY(yBounds[0]);
+                }
+            });
+
+        }
+
     }
+
 }
