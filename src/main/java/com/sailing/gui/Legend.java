@@ -42,7 +42,7 @@ public class Legend extends Group {
                     getChildren().add(format("F", "D", " - drag force", Color.GREEN, offset));
                     break;
                 case AERO:
-                    getChildren().add(format("F", "D+L", " - aerodynamic\n force", Color.ORANGE, offset));
+                    getChildren().add(format("F", "D+L", " - aerodynamic\n\t force", Color.ORANGE, offset));
                     break;
                 case ACCEL:
                     getChildren().add(format("a", "", " - acceleration", Color.RED, offset));
@@ -54,7 +54,7 @@ public class Legend extends Group {
                     getChildren().add(format("V", "T", " - true wind velocity", Color.WHITE, offset));
                     break;
                 case VEL_AW:
-                    getChildren().add(format("V", "aw", " - apparent wind\n velocity", Color.TURQUOISE, offset));
+                    getChildren().add(format("V", "aw", " - apparent wind\n\t velocity", Color.TURQUOISE, offset));
                     break;
             }
 

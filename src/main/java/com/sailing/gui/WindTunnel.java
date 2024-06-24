@@ -130,8 +130,6 @@ class WindTunnel extends Pane {
                 }
                 case SPACE -> {
                     running[0] = !running[0]; // pause
-                    // simulation.run(10);
-                    // simulation.step();
                     simulation.getCurrentState().log();
                 }
            }

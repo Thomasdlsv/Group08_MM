@@ -2,6 +2,7 @@ package com.sailing;
 
 import com.sailing.math.StateSystem;
 import com.sailing.math.data_structures.Vector;
+import com.sailing.math.data_structures.Vector2D;
 import com.sailing.math.functions.Function;
 import com.sailing.math.functions.WindWaterForceAccelerationFunction;
 import com.sailing.math.solver.Solver;
@@ -51,6 +52,22 @@ public class Simulation {
         history.add(currentState);
     }
 
+    public void setBoatAngle(double angle) {
+        Vector currentPosition = currentState.getPosition();
+        Vector position = new Vector(
+                currentPosition.getValues().get(0),
+                currentPosition.getValues().get(1),
+                angle,
+                currentPosition.getValues().get(3));
+        currentState = new StateSystem(
+                position,
+                currentState.getVelocity(),
+                currentState.getAcceleration(),
+                currentState.getMass(),
+                currentState.getTime());
+        history.add(currentState);
+    }
+
     /**
      * Rotate the sail by a given angle. <br>
      * This is one of the two control inputs of the boat.
@@ -66,6 +83,22 @@ public class Simulation {
         currentState = new StateSystem(
                 position,
                 currentState.getVelocity(),
+                currentState.getAcceleration(),
+                currentState.getMass(),
+                currentState.getTime());
+        history.add(currentState);
+    }
+
+    public void setWindVelocity(Vector2D windVelocity) {
+        Vector currentVelocity = currentState.getVelocity();
+        Vector velocity = new Vector(
+                windVelocity.getX1(),
+                windVelocity.getX2(),
+                currentVelocity.getValues().get(2),
+                currentVelocity.getValues().get(3));
+        currentState = new StateSystem(
+                currentState.getPosition(),
+                velocity,
                 currentState.getAcceleration(),
                 currentState.getMass(),
                 currentState.getTime());
@@ -94,6 +127,12 @@ public class Simulation {
 
     public void run(int steps) {
         for (int i = 0; i < steps; i++) {
+            step();
+        }
+    }
+
+    public void runUntil(double time) {
+        while (currentState.getTime() < time) {
             step();
         }
     }
