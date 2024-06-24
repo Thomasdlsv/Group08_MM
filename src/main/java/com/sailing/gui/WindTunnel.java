@@ -10,13 +10,10 @@ import com.sailing.math.functions.WindForceAccelerationFunction;
 import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
 import javafx.scene.Node;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.scene.transform.Scale;
 
 /**
@@ -32,8 +29,8 @@ class WindTunnel extends Pane {
     private double startX;
     private double startY;
 
-    LabelArrow windVelocityArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.ALICEBLUE), "v", "tw");
-    LabelArrow apparentWindArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.AQUA), "v", "aw");
+    LabelArrow windVelocityArrow = new LabelArrow(new Arrow(150, 100, 100, 90, Color.ALICEBLUE), "v", "tw");
+    LabelArrow apparentWindArrow = new LabelArrow(new Arrow(150, 100, 100, 90, Color.CYAN), "v", "aw");
     LabelArrow accelerationArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED), "a", "");
     LabelArrow velocityArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.BLUE), "v", "");
 
@@ -51,17 +48,6 @@ class WindTunnel extends Pane {
         setHeight(Sailing.HEIGHT);
 
         getChildren().addAll(sailboat);
-        Legend legend = new Legend(Legend.Force.LIFT,
-                Legend.Force.DRAG,
-                Legend.Force.AERO,
-                Legend.Force.ACCEL,
-                Legend.Force.VEL_AW,
-                Legend.Force.VEL_TW);
-        legend.setLayoutX(50);
-        int legendScale = 60;
-        legend.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * legendScale + 50);
-        makeDraggable(legend, false, true, null, new double[]{20, 340});
-        getChildren().add(legend);
 
         Vector position = new Vector(0, 0, -90, 0);
         Vector velocity = new Vector(0, 1, 0, 0).normalize();
@@ -71,7 +57,28 @@ class WindTunnel extends Pane {
         StateSystem stateSystem = new StateSystem(position, velocity, acceleration, mass, time);
         Solver solver = new RungeKutta();
 
+
         simulation = new Simulation(solver, stateSystem, 1);
+        Legend legend = new Legend(
+                new Vector2D(-50, 20),
+                "top",
+                Legend.Stat.LIFT,
+                Legend.Stat.DRAG,
+                Legend.Stat.AERO,
+                Legend.Stat.ACCEL,
+                Legend.Stat.VEL_AW,
+                Legend.Stat.VEL_TW);
+        legend.setLayoutX(50);
+        int legendScale = 60;
+        legend.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * legendScale + 50);
+        makeDraggable(legend, false, true, null, new double[]{20, 340});
+        getChildren().add(legend);
+
+        Stats windStats = new Stats(new Vector2D(0, 0), "right", "wind", stateSystem);
+        makeDraggable(windStats, true, false, new double[]{-260, 0}, null);
+        windStats.update(stateSystem);
+
+        getChildren().add(windStats);
 
         getChildren().addAll(accelerationArrow, dragForceArrow, liftForceArrow,
                 // velocityArrow, // TODO: reactivate this line to show the boat's velocity
@@ -225,10 +232,8 @@ class WindTunnel extends Pane {
             });
 
         } else if (y) {
-            System.out.println("im here");
             node.setOnMousePressed(e -> {
                 startY = e.getSceneY() - node.getTranslateY();
-                System.out.println(startY);
             });
 
             node.setOnMouseDragged(e -> {
