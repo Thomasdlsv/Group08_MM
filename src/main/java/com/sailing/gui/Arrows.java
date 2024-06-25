@@ -11,10 +11,8 @@ import javafx.scene.paint.Color;
 
 public class Arrows extends Parent {
 
-    SailboatGUI boat;
+    private final SailboatGUI boat;
 
-    private final LabelArrow windVelocityArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.ALICEBLUE), "v", "tw");
-    private final LabelArrow apparentWindArrow = new LabelArrow(new Arrow(100, 100, 100, 90, Color.AQUA), "v", "aw");
     private final LabelArrow accelerationArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.RED), "a", "");
     private final LabelArrow velocityArrow = new LabelArrow(new Arrow(Sailing.X_CENTER, Sailing.Y_CENTER, 100, 90, Color.BLUE), "v", "");
 
@@ -30,9 +28,7 @@ public class Arrows extends Parent {
                 dragForceArrow,
                 liftForceArrow,
                 velocityArrow,
-                windVelocityArrow,
-                windForceArrow,
-                apparentWindArrow);
+                windForceArrow);
     }
 
     public void update(StateSystem currentState) {
@@ -75,17 +71,13 @@ public class Arrows extends Parent {
     }
 
     private void drawVelocityArrows(StateSystem currentState) {
-        Vector2D windVector = new Vector2D(currentState.getVelocity().getValue(0), currentState.getVelocity().getValue(1));
         Vector2D boatVector = new Vector2D(currentState.getVelocity().getValue(2), currentState.getVelocity().getValue(3));
-        Vector2D apparentWindVector = windVector.subtract(boatVector);
         double xStart = (boat.getBoatIV().localToScene(boat.getBoatIV().getBoundsInLocal()).getCenterX());
         double yStart = (boat.getBoatIV().localToScene(boat.getBoatIV().getBoundsInLocal()).getCenterY());
 
         double scalar = 9;
 
-        windVelocityArrow.setLengthAndAngle(windVector.getLength() * scalar, windVector.toPolar().getX2());
         velocityArrow.setStartLengthAndAngle(new Vector2D(xStart, yStart), boatVector.getLength() * scalar, boatVector.toPolar().getX2());
-        apparentWindArrow.setLengthAndAngle(apparentWindVector.getLength() * scalar, apparentWindVector.toPolar().getX2());
     }
 
 }

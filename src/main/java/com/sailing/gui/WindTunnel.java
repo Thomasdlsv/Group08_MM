@@ -11,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
 
 /**
@@ -25,7 +24,7 @@ class WindTunnel extends Pane {
 
     private final Arrows arrows;
 
-    double windVelocity = 10;
+    double windVelocity = 8;
 
     // for dragging
     private double startX;
@@ -51,7 +50,7 @@ class WindTunnel extends Pane {
         StateSystem stateSystem = new StateSystem(position, velocity, acceleration, mass, time);
         Solver solver = new RungeKutta();
 
-        simulation = new Simulation(solver, stateSystem, 0.1);
+        simulation = new Simulation(solver, stateSystem, 0.01);
         Legend legend = new Legend(
                 new Vector2D(-50, 20),
                 "top",
@@ -85,8 +84,8 @@ class WindTunnel extends Pane {
                     if (running[0]) {
                         simulation.run(1);
                         arrows.update(simulation.getCurrentState());
+                        windStats.update(simulation.getCurrentState());
                         boat.repaintSail(simulation.getCurrentState());
-                        stats.update(simulation.getCurrentState());
                         count++;
                         if (count % 100 == 0) {
                             simulation.getCurrentState().log();
@@ -101,7 +100,6 @@ class WindTunnel extends Pane {
 
 
         getChildren().addAll(
-                stats,
                 arrows);
         arrows.update(simulation.getCurrentState());
 

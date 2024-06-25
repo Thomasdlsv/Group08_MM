@@ -6,15 +6,17 @@ import com.sailing.math.data_structures.Vector2D;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
 public class Stats extends Legend {
 
-    private Text time, boatVelocity, boatPosition, appWindVelocity, appWindAngle, angleOfAttack, cog;
-    private Group windStats, boatStats;
+    private final Text time, boatVelocity, boatPosition, appWindVelocity, appWindAngle, angleOfAttack, cog;
+    private final Group windStats;
+    private Group boatStats;
 
     private Vector2D pos;
-    private StateSystem stateSystem;
+
+    private final LabelArrow windVelocityArrow = new LabelArrow(new Arrow(150, 100, 100, 90, Color.ALICEBLUE), "v", "tw");
+    private final LabelArrow apparentWindArrow = new LabelArrow(new Arrow(150, 100, 100, 90, Color.AQUA), "v", "aw");
 
     public Stats(Vector2D pos, String dragPos, String statType, StateSystem stateSystem) {
         super(pos, dragPos);
@@ -31,6 +33,7 @@ public class Stats extends Legend {
         if (statType.equals("wind")) {
             formatWindStats();
             getChildren().addAll(windStats);
+            getChildren().addAll(windVelocityArrow, apparentWindArrow);
         } else if (statType.equals("boat")) {
             boatStats = new Group();
             //formatBoatStats();
@@ -87,6 +90,18 @@ public class Stats extends Legend {
         setBoatPosition(state.getPosition().getValue(0), state.getPosition().getValue(1));
         setApparentWindVelocity(state.getWindVelocity().getLength());
         setApparentWindAngle(state.getApparentWindAngle());
+        drawVelocityArrows(state);
+    }
+
+    private void drawVelocityArrows(StateSystem currentState) {
+        Vector2D windVector = new Vector2D(currentState.getVelocity().getValue(0), currentState.getVelocity().getValue(1));
+        Vector2D boatVector = new Vector2D(currentState.getVelocity().getValue(2), currentState.getVelocity().getValue(3));
+        Vector2D apparentWindVector = windVector.subtract(boatVector);
+
+        double scalar = 9;
+
+        windVelocityArrow.setLengthAndAngle(windVector.getLength() * scalar, windVector.toPolar().getX2());
+        apparentWindArrow.setLengthAndAngle(apparentWindVector.getLength() * scalar, apparentWindVector.toPolar().getX2());
     }
 
     private void setApparentWindVelocity(double apparentWindVelocity) {
