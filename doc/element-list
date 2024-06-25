@@ -1,5 +1,6 @@
 com.sailing
 com.sailing.experiments.stepsize
+com.sailing.experiments.water_test
 com.sailing.experiments.windtunnel
 com.sailing.gui
 com.sailing.math
