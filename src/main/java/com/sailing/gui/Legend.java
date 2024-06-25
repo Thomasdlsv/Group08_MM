@@ -1,5 +1,8 @@
 package com.sailing.gui;
 
+import com.sailing.Simulation;
+import com.sailing.math.StateSystem;
+import com.sailing.math.data_structures.Vector2D;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
@@ -8,7 +11,7 @@ import javafx.scene.text.TextFlow;
 
 public class Legend extends Group {
 
-    enum Force {
+    enum Stat {
         LIFT,
         DRAG,
         AERO,
@@ -20,41 +23,41 @@ public class Legend extends Group {
 
     private double legendScale = 60;
 
-    Legend(Force ... forces) {
+    Legend(Vector2D pos, String dragPos) {
+        ImageView paper = getImage(pos, dragPos);
+        getChildren().add(paper);
+    }
 
+    Legend(Vector2D pos, String dragPos, Stat... stats) {
 
-        ImageView paper = new ImageView(Images.paper);
-        paper.setPreserveRatio(true);
-        paper.setFitHeight(getChildren().size() * legendScale);
-        paper.setLayoutY(20);
-        paper.setLayoutX(-50);
+        ImageView paper = getImage(pos, dragPos);
 
         getChildren().add(paper);
         double offset = 0;
-        for (Force force : forces) {
+        for (Stat stat : stats) {
 
-            switch (force) {
+            switch (stat) {
                 case LIFT:
-                    getChildren().add(format("F", "L", " - lift force", Color.YELLOW, offset));
+                    getChildren().add(getLegendEntry("F", "L", " - lift force", Color.YELLOW, offset));
                     getChildren().add(new Text(""));
                     break;
                 case DRAG:
-                    getChildren().add(format("F", "D", " - drag force", Color.GREEN, offset));
+                    getChildren().add(getLegendEntry("F", "D", " - drag force", Color.GREEN, offset));
                     break;
                 case AERO:
-                    getChildren().add(format("F", "D+L", " - aerodynamic\n\t force", Color.ORANGE, offset));
+                    getChildren().add(getLegendEntry("F", "D+L", " - aerodynamic\n\t force", Color.ORANGE, offset));
                     break;
                 case ACCEL:
-                    getChildren().add(format("a", "", " - acceleration", Color.RED, offset));
+                    getChildren().add(getLegendEntry("a", "", " - acceleration", Color.RED, offset));
                     break;
                 case VEL:
-                    getChildren().add(format("V", "", " - velocity", Color.BLUE, offset));
+                    getChildren().add(getLegendEntry("V", "", " - velocity", Color.BLUE, offset));
                     break;
                 case VEL_TW:
-                    getChildren().add(format("V", "T", " - true wind velocity", Color.WHITE, offset));
+                    getChildren().add(getLegendEntry("V", "T", " - true wind velocity", Color.WHITE, offset));
                     break;
                 case VEL_AW:
-                    getChildren().add(format("V", "aw", " - apparent wind\n\t velocity", Color.TURQUOISE, offset));
+                    getChildren().add(getLegendEntry("V", "aw", " - apparent wind\n\t velocity", Color.TURQUOISE, offset));
                     break;
             }
 
@@ -65,7 +68,31 @@ public class Legend extends Group {
 
     }
 
-    private TextFlow format(String label, String subscript, String definition, Color color, double offset) {
+    ImageView getImage(Vector2D pos, String dragPos) {
+        ImageView paper = new ImageView();
+        switch (dragPos) {
+            case "top":
+                paper.setImage(Images.paperTop);
+                break;
+            case "bottom":
+                paper.setImage(Images.paperBottom);
+                break;
+            case "left":
+                paper.setImage(Images.paperLeft);
+                break;
+            case "right":
+                paper.setImage(Images.paperRight);
+                break;
+        }
+        paper.setPreserveRatio(true);
+        paper.setFitHeight(getChildren().size() * legendScale);
+        paper.setLayoutX(pos.getX1());
+        paper.setLayoutY(pos.getX2());
+        return paper;
+    }
+
+
+    private TextFlow getLegendEntry(String label, String subscript, String definition, Color color, double offset) {
 
        Text labelText = new Text(label);
        labelText.setFill(color);

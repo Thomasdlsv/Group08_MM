@@ -75,6 +75,12 @@ public class StateSystem {
         System.out.println("Boat speed:   " + getBoatVelocity().getLength());
     }
 
+    public int getApparentWindAngle() {
+        return (int) Math.toDegrees(Math.atan2(velocity.getValue(0) + velocity.getValue(2),
+                velocity.getValue(1) + velocity.getValue(3)));
+
+    }
+
     @Override
     public String toString() {
         return "StateSystem{" + "\n" +
