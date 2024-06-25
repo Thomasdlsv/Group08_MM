@@ -22,6 +22,7 @@ abstract class Images {
     static final Image paperRight = new Image("/paper_right.png");
     static final Image paperBottom = new Image("/paper_bottom.png");
     static final Image paperLeft = new Image("/paper_left.png");
+    static final Image manual = new Image("/manual.png");
 
 
 }

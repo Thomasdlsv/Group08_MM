@@ -76,8 +76,16 @@ public class StateSystem {
     }
 
     public int getApparentWindAngle() {
-        return (int) Math.toDegrees(Math.atan2(velocity.getValue(0) + velocity.getValue(2),
-                velocity.getValue(1) + velocity.getValue(3)));
+        int angle =(int) Math.toDegrees(Math.atan2(velocity.getValue(0) - velocity.getValue(2),
+                velocity.getValue(1) - velocity.getValue(3)));
+
+        if (angle < 0) angle *= -1;
+        else if (angle > 0) {
+            angle -= 360;
+            angle *= -1;
+        }
+
+        return angle;
 
     }
 
