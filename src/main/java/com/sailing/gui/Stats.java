@@ -9,37 +9,74 @@ import javafx.scene.text.Text;
 
 public class Stats extends Legend {
 
-    private final Text time, boatVelocity, boatPosition, appWindVelocity, appWindAngle, angleOfAttack, cog;
-    private final Group windStats;
-    private Group boatStats;
-
-    private Vector2D pos;
 
     private final LabelArrow windVelocityArrow = new LabelArrow(new Arrow(150, 100, 100, 90, Color.ALICEBLUE), "v", "tw");
     private final LabelArrow apparentWindArrow = new LabelArrow(new Arrow(150, 100, 100, 90, Color.AQUA), "v", "aw");
+    private Text time, sog, boatPosition, appWindVelocity, appWindAngle, angleOfAttack, cog;
+    private Group windStats, boatStats;
 
-    public Stats(Vector2D pos, String dragPos, String statType, StateSystem stateSystem) {
+    private Vector2D pos;
+    private StateSystem stateSystem;
+    private SailboatGUI boat;
+
+
+    public Stats(Vector2D pos, String dragPos, String statType, StateSystem stateSystem, SailboatGUI boat) {
         super(pos, dragPos);
         this.pos = pos;
-        windStats = new Group();
+        this.boat = boat;
         appWindVelocity = new Text();
         appWindAngle = new Text();
         time = new Text();
-        boatVelocity = new Text();
+        sog = new Text();
         boatPosition = new Text();
         angleOfAttack = new Text();
         cog = new Text();
+        windStats = new Group();
+        boatStats = new Group();
         update(stateSystem);
         if (statType.equals("wind")) {
             formatWindStats();
             getChildren().addAll(windStats);
             getChildren().addAll(windVelocityArrow, apparentWindArrow);
         } else if (statType.equals("boat")) {
-            boatStats = new Group();
-            //formatBoatStats();
+            formatBoatStats();
             getChildren().addAll(boatStats);
         }
 
+    }
+
+    private void formatBoatStats() {
+        boatStats.setLayoutX(pos.getX1());
+        boatStats.setLayoutY(pos.getX2());
+
+        Text boat = new Text("Boat");
+        boat.setTranslateX(1400);
+        boat.setTranslateY(80);
+        boat.setStyle("-fx-font-size: 40pt;");
+
+        Text speedOverGround = new Text("SOG");
+        speedOverGround.setTranslateX(boat.getTranslateX() - 30);
+        speedOverGround.setTranslateY(boat.getTranslateY() + 30);
+        speedOverGround.setStyle("-fx-font-size: 20pt;");
+
+        System.out.println(sog.getBoundsInLocal().getWidth());
+        sog.setTranslateX(speedOverGround.getTranslateX()  - sog.getBoundsInLocal().getWidth() / 2);
+        sog.setTranslateY(speedOverGround.getTranslateY() + 30);
+        sog.setStyle("-fx-font-size: 20pt;");
+
+
+
+        Text courseOverGround = new Text("COG");
+        courseOverGround.setTranslateX(boat.getTranslateX() + 90);
+        courseOverGround.setTranslateY(boat.getTranslateY() + 30);
+        courseOverGround.setStyle("-fx-font-size: 18pt;");
+
+        System.out.println(cog.getBoundsInLocal().getWidth());
+        cog.setTranslateX(courseOverGround.getTranslateX() + 20);
+        cog.setTranslateY(courseOverGround.getTranslateY() + 30);
+        cog.setStyle("-fx-font-size: 20pt;");
+
+        getChildren().addAll(boat, speedOverGround, courseOverGround, sog, cog);
     }
 
     private void formatWindStats() {
@@ -49,8 +86,6 @@ public class Stats extends Legend {
         Text wind = new Text("Wind");
         wind.setTranslateX(85);
         wind.setTranslateY(80);
-        wind.setStroke(Color.BLUE);
-        wind.setFill(Color.GREY);
         wind.setStyle("-fx-font-size: 40pt;");
 
         Text appWindVelLabel = new Text("App Wind");
@@ -72,7 +107,6 @@ public class Stats extends Legend {
 
         windStats.getChildren().addAll(wind, appWindVelLabel, vel, appWindAngleLabel, ang, appWindVelocity,  appWindAngle);
 
-        System.out.println(appWindVelocity.getLayoutBounds().getWidth());
         appWindVelocity.setTranslateX(vel.getTranslateX() - 10 - appWindVelocity.getBoundsInLocal().getWidth() / 2);
         appWindVelocity.setTranslateY(vel.getTranslateY() + 40);
         appWindVelocity.setStyle("-fx-font-size: 30pt;");
@@ -90,6 +124,16 @@ public class Stats extends Legend {
         setBoatPosition(state.getPosition().getValue(0), state.getPosition().getValue(1));
         setApparentWindVelocity(state.getWindVelocity().getLength());
         setApparentWindAngle(state.getApparentWindAngle());
+
+        setCourseOverGround((int) boat.getRotationAngle());
+
+
+        cog.setTranslateX(boatStats.getLayoutX() + 210 - cog.getBoundsInLocal().getWidth() / 2);
+        sog.setTranslateX(boatStats.getLayoutX() + 90 - sog.getBoundsInLocal().getWidth() / 2);
+        appWindVelocity.setTranslateX(windStats.getLayoutX() + 70 - appWindVelocity.getBoundsInLocal().getWidth() / 2);
+        appWindAngle.setTranslateX(windStats.getLayoutX() + 210 - appWindAngle.getBoundsInLocal().getWidth() / 2);
+
+
         drawVelocityArrows(state);
     }
 
@@ -118,8 +162,12 @@ public class Stats extends Legend {
         time.setText("Time: " + minutes + "m " + seconds + "s");
     }
 
+    private void setCourseOverGround(int courseOverGround) {
+        this.cog.setText(String.format("%d", courseOverGround));
+    }
+
     public void setBoatVelocity(double v) {
-        boatVelocity.setText(String.format("Velocity: %.2f m/s", v));
+        sog.setText(String.format("%.2f", v));
     }
 
     public void setBoatPosition(double x, double y) {

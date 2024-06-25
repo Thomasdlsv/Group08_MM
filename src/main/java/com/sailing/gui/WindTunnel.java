@@ -66,12 +66,18 @@ class WindTunnel extends Pane {
         makeDraggable(legend, false, true, null, new double[]{20, 340});
         getChildren().add(legend);
 
-        Stats windStats = new Stats(new Vector2D(0, 0), "right", "wind", stateSystem);
+        Stats windStats = new Stats(new Vector2D(0, 0), "right", "wind", stateSystem, sailboat);
         makeDraggable(windStats, true, false, new double[]{-260, 0}, null);
         windStats.update(stateSystem);
 
         getChildren().add(windStats);
         final boolean[] running = {true};
+
+        Stats boatStats = new Stats(new Vector2D(1300, 0), "left", "boat", stateSystem, sailboat);
+        makeDraggable(boatStats, true, false, new double[]{0, 250}, null);
+
+        getChildren().addAll(windStats, boatStats);
+
 
         AnimationTimer timer = new AnimationTimer() {
             long last = 0;
@@ -112,6 +118,7 @@ class WindTunnel extends Pane {
         sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
 
         setOnKeyPressed(event -> {
+            boatStats.update(stateSystem);
             switch (event.getCode()) {
                 case LEFT -> {
                     simulation.rotateBoat(-1);

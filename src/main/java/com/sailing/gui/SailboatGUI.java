@@ -119,6 +119,6 @@ class SailboatGUI extends Group {
     }
 
     double getRotationAngle() {
-        return r.getAngle();
+        return r.getAngle() % 360.0;
     }
 }
