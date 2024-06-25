@@ -8,10 +8,14 @@ import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
+
+import java.util.*;
 
 /**
  *
@@ -74,7 +78,12 @@ class WindTunnel extends Pane {
         Stats boatStats = new Stats(new Vector2D(1300, 0), "left", "boat", stateSystem, sailboat);
         makeDraggable(boatStats, true, false, new double[]{0, 250}, null);
 
-        getChildren().addAll(windStats, boatStats);
+        ImageView manual = new ImageView(Images.manual);
+        manual.setLayoutX(1300);
+        manual.setLayoutY(500);
+        makeDraggable(manual, false, true, null, new double[]{0, 320});
+
+        getChildren().addAll(windStats, boatStats, manual);
 
 
         AnimationTimer timer = new AnimationTimer() {
@@ -108,41 +117,38 @@ class WindTunnel extends Pane {
                 arrows);
         arrows.update(simulation.getCurrentState());
 
-//        Text windLabel = new Text("Wind");
-//        windLabel.setFill(Color.ALICEBLUE);
-//        windLabel.setX(80);
-//        windLabel.setY(90);
-//        getChildren().add(windLabel);
         sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
         sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
 
-        setOnKeyPressed(event -> {
-            boatStats.update(stateSystem);
-            switch (event.getCode()) {
-                case LEFT -> {
-                    simulation.rotateBoat(-1);
-                    sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
-                }
-                case RIGHT -> {
-                    simulation.rotateBoat(1);
-                    sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
-                }
-                case UP -> {
+        final List<KeyCode> validKeys = Arrays.asList(KeyCode.UP, KeyCode.DOWN,
+                KeyCode.LEFT, KeyCode.RIGHT, KeyCode.SPACE);
+        final Set<KeyCode> pressedKeys = new HashSet<>();
+        setOnKeyReleased(e -> pressedKeys.clear());
+
+        setOnKeyPressed(e -> {
+            if (validKeys.contains(e.getCode())) {
+                boatStats.update(stateSystem);
+                pressedKeys.add(e.getCode());
+                if (pressedKeys.contains(KeyCode.UP)) {
                     simulation.rotateSail(-1);
                     sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
-                }
-                case DOWN -> {
+                } if (pressedKeys.contains(KeyCode.DOWN)) {
                     simulation.rotateSail(1);
                     sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
-                }
-                case SPACE -> {
+                }  if (pressedKeys.contains(KeyCode.LEFT)) {
+                    simulation.rotateBoat(-1);
+                    sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
+                }  if (pressedKeys.contains(KeyCode.RIGHT)) {
+                    simulation.rotateBoat(1);
+                    sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
+                }  if (pressedKeys.contains(KeyCode.SPACE)) {
                     running[0] = !running[0]; // pause
                     simulation.getCurrentState().log();
                 }
-           }
-           boat.repaintSail(simulation.getCurrentState());
-           arrows.update(simulation.getCurrentState());
-       });
+            }
+            boat.repaintSail(simulation.getCurrentState());
+            arrows.update(simulation.getCurrentState());
+        });
 
        Scale s = new Scale();
        s.setPivotX(Sailing.X_CENTER);
