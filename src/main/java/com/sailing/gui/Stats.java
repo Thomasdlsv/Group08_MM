@@ -33,7 +33,6 @@ public class Stats extends Legend {
         cog = new Text();
         windStats = new Group();
         boatStats = new Group();
-        update(stateSystem);
         if (statType.equals("wind")) {
             formatWindStats();
             getChildren().addAll(windStats);
@@ -61,7 +60,7 @@ public class Stats extends Legend {
 
         System.out.println(sog.getBoundsInLocal().getWidth());
         sog.setTranslateX(speedOverGround.getTranslateX()  - sog.getBoundsInLocal().getWidth() / 2);
-        sog.setTranslateY(speedOverGround.getTranslateY() + 30);
+        sog.setTranslateY(speedOverGround.getTranslateY() + 50);
         sog.setStyle("-fx-font-size: 30pt;");
 
 
@@ -71,7 +70,7 @@ public class Stats extends Legend {
         courseOverGround.setStyle("-fx-font-size: 18pt;");
 
         cog.setTranslateX(courseOverGround.getTranslateX() + 20);
-        cog.setTranslateY(courseOverGround.getTranslateY() + 30);
+        cog.setTranslateY(courseOverGround.getTranslateY() + 50);
         cog.setStyle("-fx-font-size: 30pt;");
 
 
@@ -92,7 +91,7 @@ public class Stats extends Legend {
         aoa.setStyle("-fx-font-size: 18pt;");
 
         angleOfAttack.setTranslateX(aoa.getTranslateX() + 10);
-        angleOfAttack.setTranslateY(aoa.getTranslateY() + 30);
+        angleOfAttack.setTranslateY(aoa.getTranslateY() + 50);
         angleOfAttack.setStyle("-fx-font-size: 30pt;");
 
 

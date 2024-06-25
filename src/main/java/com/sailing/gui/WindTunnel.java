@@ -68,7 +68,6 @@ class WindTunnel extends Pane {
 
         Stats windStats = new Stats(new Vector2D(0, 0), "right", "wind", stateSystem, sailboat);
         makeDraggable(windStats, true, false, new double[]{-260, 0}, null);
-        windStats.update(stateSystem);
 
         final boolean[] running = {true};
 
@@ -86,11 +85,11 @@ class WindTunnel extends Pane {
             public void handle(long now) {
                 // execute 10 times per second
                 if (now - last >= 10_000_000) {
+                    windStats.update(simulation.getCurrentState());
+                    boatStats.update(simulation.getCurrentState());
                     if (running[0]) {
                         simulation.run(1);
                         arrows.update(simulation.getCurrentState());
-                        windStats.update(simulation.getCurrentState());
-                        boatStats.update(simulation.getCurrentState());
                         boat.repaintSail(simulation.getCurrentState());
                         count++;
                         if (count % 100 == 0) {
