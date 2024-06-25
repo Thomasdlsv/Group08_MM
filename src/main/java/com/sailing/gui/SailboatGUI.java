@@ -40,7 +40,7 @@ class SailboatGUI extends Group {
         }
 
         double getRotationAngle() {
-            return r.getAngle();
+            return r.getAngle() % 360;
         }
 
         ImageView getSailIV() {
@@ -100,6 +100,12 @@ class SailboatGUI extends Group {
         } else {
             getSail().getSailIV().setScaleX(-1);
         }
+    }
+
+    public double getSailAngleToNorth() {
+
+        return (getRotationAngle() + sail.getRotationAngle()) % 360;
+
     }
 
     Sailboat getBoat() {

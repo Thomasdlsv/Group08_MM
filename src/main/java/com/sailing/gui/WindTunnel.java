@@ -90,6 +90,7 @@ class WindTunnel extends Pane {
                         simulation.run(1);
                         arrows.update(simulation.getCurrentState());
                         windStats.update(simulation.getCurrentState());
+                        boatStats.update(simulation.getCurrentState());
                         boat.repaintSail(simulation.getCurrentState());
                         count++;
                         if (count % 100 == 0) {

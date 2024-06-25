@@ -56,27 +56,48 @@ public class Stats extends Legend {
 
         Text speedOverGround = new Text("SOG");
         speedOverGround.setTranslateX(boat.getTranslateX() - 30);
-        speedOverGround.setTranslateY(boat.getTranslateY() + 30);
+        speedOverGround.setTranslateY(boat.getTranslateY() + 50);
         speedOverGround.setStyle("-fx-font-size: 20pt;");
 
         System.out.println(sog.getBoundsInLocal().getWidth());
         sog.setTranslateX(speedOverGround.getTranslateX()  - sog.getBoundsInLocal().getWidth() / 2);
         sog.setTranslateY(speedOverGround.getTranslateY() + 30);
-        sog.setStyle("-fx-font-size: 20pt;");
-
+        sog.setStyle("-fx-font-size: 30pt;");
 
 
         Text courseOverGround = new Text("COG");
         courseOverGround.setTranslateX(boat.getTranslateX() + 90);
-        courseOverGround.setTranslateY(boat.getTranslateY() + 30);
+        courseOverGround.setTranslateY(boat.getTranslateY() + 50);
         courseOverGround.setStyle("-fx-font-size: 18pt;");
 
-        System.out.println(cog.getBoundsInLocal().getWidth());
         cog.setTranslateX(courseOverGround.getTranslateX() + 20);
         cog.setTranslateY(courseOverGround.getTranslateY() + 30);
-        cog.setStyle("-fx-font-size: 20pt;");
+        cog.setStyle("-fx-font-size: 30pt;");
 
-        getChildren().addAll(boat, speedOverGround, courseOverGround, sog, cog);
+
+        Text position = new Text("Position");
+        position.setTranslateX(boat.getTranslateX() - 50);
+        position.setTranslateY(boat.getTranslateY() + 150);
+        position.setStyle("-fx-font-size: 18pt;");
+
+
+        boatPosition.setTranslateX(position.getTranslateX() );
+        boatPosition.setTranslateY(position.getTranslateY() + 30);
+        boatPosition.setStyle("-fx-font-size: 30pt;");
+
+
+        Text aoa = new Text("AOA");
+        aoa.setTranslateX(boat.getTranslateX() + 90);
+        aoa.setTranslateY(boat.getTranslateY() + 150);
+        aoa.setStyle("-fx-font-size: 18pt;");
+
+        angleOfAttack.setTranslateX(aoa.getTranslateX() + 10);
+        angleOfAttack.setTranslateY(aoa.getTranslateY() + 30);
+        angleOfAttack.setStyle("-fx-font-size: 30pt;");
+
+
+
+        getChildren().addAll(boat, speedOverGround, courseOverGround, sog, cog, position, aoa, boatPosition, angleOfAttack);
     }
 
     private void formatWindStats() {
@@ -107,7 +128,7 @@ public class Stats extends Legend {
 
         windStats.getChildren().addAll(wind, appWindVelLabel, vel, appWindAngleLabel, ang, appWindVelocity,  appWindAngle);
 
-        appWindVelocity.setTranslateX(vel.getTranslateX() - 10 - appWindVelocity.getBoundsInLocal().getWidth() / 2);
+        appWindVelocity.setTranslateX(vel.getTranslateX() - appWindVelocity.getBoundsInLocal().getWidth() / 2);
         appWindVelocity.setTranslateY(vel.getTranslateY() + 40);
         appWindVelocity.setStyle("-fx-font-size: 30pt;");
 
@@ -122,16 +143,16 @@ public class Stats extends Legend {
         setTime(state.getTime());
         setBoatVelocity(new Vector(state.getVelocity().getValue(2), state.getVelocity().getValue(3)).getLength());
         setBoatPosition(state.getPosition().getValue(0), state.getPosition().getValue(1));
-        setApparentWindVelocity(state.getWindVelocity().getLength());
+        setApparentWindVelocity(state.getWindVelocity().subtract(state.getBoatVelocity()).getLength());
         setApparentWindAngle(state.getApparentWindAngle());
-
         setCourseOverGround((int) boat.getRotationAngle());
-
+        setAngleOfAttack(state);
 
         cog.setTranslateX(boatStats.getLayoutX() + 210 - cog.getBoundsInLocal().getWidth() / 2);
         sog.setTranslateX(boatStats.getLayoutX() + 90 - sog.getBoundsInLocal().getWidth() / 2);
-        appWindVelocity.setTranslateX(windStats.getLayoutX() + 70 - appWindVelocity.getBoundsInLocal().getWidth() / 2);
+        appWindVelocity.setTranslateX(windStats.getLayoutX() + 90 - appWindVelocity.getBoundsInLocal().getWidth() / 2);
         appWindAngle.setTranslateX(windStats.getLayoutX() + 210 - appWindAngle.getBoundsInLocal().getWidth() / 2);
+        angleOfAttack.setTranslateX(boatStats.getLayoutX() + 215 - angleOfAttack.getBoundsInLocal().getWidth() / 2);
 
 
         drawVelocityArrows(state);
@@ -150,6 +171,24 @@ public class Stats extends Legend {
 
     private void setApparentWindVelocity(double apparentWindVelocity) {
         this.appWindVelocity.setText(String.format("%.2f", apparentWindVelocity));
+    }
+
+    private void setAngleOfAttack(StateSystem state) {
+         double sailAngle = boat.getSailAngleToNorth();
+         int apparentWindAngle = state.getApparentWindAngle();
+
+         int res = (int) Math.abs(sailAngle - apparentWindAngle);
+         if (res > 90) {
+             apparentWindAngle = (apparentWindAngle + 180) % 360;
+             res = (int) Math.abs(sailAngle - apparentWindAngle);
+             if (res > 90) {
+                 res = Math.abs(res - 180);
+             }
+         }
+
+         this.angleOfAttack.setText(String.format("%d", res));
+
+
     }
 
     private void setApparentWindAngle(int apparentWindAngle) {
@@ -171,6 +210,6 @@ public class Stats extends Legend {
     }
 
     public void setBoatPosition(double x, double y) {
-        boatPosition.setText(String.format("Position: %.2f, %.2f", x, y));
+        boatPosition.setText(String.format("%.2f,\n%.2f", x, y * -1));
     }
 }
