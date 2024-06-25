@@ -70,7 +70,6 @@ class WindTunnel extends Pane {
         makeDraggable(windStats, true, false, new double[]{-260, 0}, null);
         windStats.update(stateSystem);
 
-        getChildren().add(windStats);
         final boolean[] running = {true};
 
         Stats boatStats = new Stats(new Vector2D(1300, 0), "left", "boat", stateSystem, sailboat);
