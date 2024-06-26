@@ -16,6 +16,11 @@ abstract class Images {
             Sailing.HEIGHT * SCALE * 0.6,
             true, false);
 
+    static final Image target = new Image("/target.png",
+            Sailing.WIDTH * SCALE * 0.6,
+            Sailing.HEIGHT * SCALE * 0.6,
+            true, false);
+
     static final Image background = new Image("/background.png");
 
     static final Image paperTop = new Image("/paper_top.png");

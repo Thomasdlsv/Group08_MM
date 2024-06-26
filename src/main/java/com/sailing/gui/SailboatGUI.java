@@ -54,14 +54,18 @@ class SailboatGUI extends Group {
     private SailGUI sail;
     private ImageView boatIV;
 
-    SailboatGUI(Sailboat boat, SailGUI sailGUI) {
+    SailboatGUI(Sailboat boat, SailGUI sailGUI, double scale) {
         this.boat = boat;
         this.sail = sailGUI;
+        sail.setScaleX(scale);
+        sail.setScaleY(scale);
 
         r.setPivotX(Sailing.X_CENTER);
         r.setPivotY(Sailing.Y_CENTER);
 
         boatIV = new ImageView(Images.boat);
+        boatIV.setScaleX(scale);
+        boatIV.setScaleY(scale);
         boatIV.setLayoutX(Sailing.X_CENTER - boatIV.getBoundsInLocal().getWidth() / 2);
         boatIV.setLayoutY(Sailing.Y_CENTER - boatIV.getBoundsInLocal().getHeight() / 2);
 

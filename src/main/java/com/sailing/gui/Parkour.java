@@ -9,22 +9,18 @@ import com.sailing.math.solver.RungeKutta;
 import com.sailing.math.solver.Solver;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Node;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
-import javafx.scene.transform.Scale;
+import javafx.scene.text.Text;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
  */
-class WindTunnel extends Pane {
+class Parkour extends Pane {
 
     private final SailboatGUI sailboat;
 
@@ -32,14 +28,17 @@ class WindTunnel extends Pane {
 
     private final Arrows arrows;
 
+    private final Text timeText = new Text("Time: 00:00");
+
     double windVelocity = 8;
 
     // for dragging
     private double startX;
-    private double startY;
 
-    WindTunnel() {
-        sailboat = new SailboatGUI(new Sailboat(), new SailboatGUI.SailGUI(), 1);
+    long currentTime;
+
+    Parkour() {
+        sailboat = new SailboatGUI(new Sailboat(), new SailboatGUI.SailGUI(), 0.5);
         setBackground(new Background(new BackgroundImage(Images.background, null, null, null, null)));
         arrows = new Arrows(sailboat);
 
@@ -50,8 +49,8 @@ class WindTunnel extends Pane {
 
         getChildren().addAll(sailboat);
 
-        Vector position = new Vector(0, 0, -90, 0);
-        Vector velocity = new Vector(0, 1, 0, 0).normalize().multiplyByScalar(windVelocity);
+        Vector position = new Vector(50, 25, -180, 0);
+        Vector velocity = new Vector(1, 1, 0, 0).normalize().multiplyByScalar(windVelocity);
         Vector acceleration = new Vector(0, 0);
         double mass = 100;
         double time = 0;
@@ -59,83 +58,91 @@ class WindTunnel extends Pane {
         Solver solver = new RungeKutta();
 
         simulation = new Simulation(solver, stateSystem, 0.01);
-        Legend legend = new Legend(
-                new Vector2D(-50, 20),
-                "top",
-                Legend.Stat.LIFT,
-                Legend.Stat.DRAG,
-                Legend.Stat.AERO,
-                Legend.Stat.ACCEL,
-                Legend.Stat.VEL_AW,
-                Legend.Stat.VEL_TW);
-        legend.setLayoutX(50);
-        int legendScale = 60;
-        legend.setLayoutY(Sailing.HEIGHT - legend.getChildren().size() * legendScale + 50);
-        makeDraggable(legend, false, true, null, new double[]{20, 340});
-        getChildren().add(legend);
 
         Stats windStats = new Stats(new Vector2D(0, 0), "right", "wind", stateSystem, sailboat);
-        makeDraggable(windStats, true, false, new double[]{-260, 0}, null);
+        makeXDraggable(windStats, new double[]{-260, 0});
 
         final boolean[] running = {true};
 
-        Stats boatStats = new Stats(new Vector2D(1300, 0), "left", "boat", stateSystem, sailboat);
-        makeDraggable(boatStats, true, false, new double[]{0, 250}, null);
+        timeText.setX(650);
+        timeText.setY(30);
+        timeText.setStyle("-fx-font-size: 40px;");
 
-        ImageView manual = new ImageView(Images.manual);
-        manual.setLayoutX(1300);
-        manual.setLayoutY(500);
-        makeDraggable(manual, false, true, null, new double[]{0, 320});
+        getChildren().addAll(windStats);
+        getChildren().add(timeText);
 
-        getChildren().addAll(windStats, boatStats, manual);
-
+        currentTime = 0;
+        ArrayList<Target> targets = new ArrayList<>();
+        targets.add(new Target(1, new Vector2D(50, -25)));
+        targets.add(new Target(2, new Vector2D(20, 25)));
+        targets.add(new Target(3, new Vector2D(-20, -25)));
+        targets.add(new Target(4, new Vector2D(-50, 25)));
+        getChildren().addAll(targets);
 
         AnimationTimer timer = new AnimationTimer() {
             long last = 0;
             long count = 0;
 
+            long lastTime = System.currentTimeMillis();
+
             @Override
             public void handle(long now) {
                 // execute 10 times per second
                 if (now - last >= 10_000_000) {
-                    windStats.update(simulation.getCurrentState());
-                    boatStats.update(simulation.getCurrentState());
                     if (running[0]) {
                         simulation.run(1);
                         arrows.update(simulation.getCurrentState());
                         sailboat.repaintSail(simulation.getCurrentState());
+                        windStats.update(simulation.getCurrentState());
                         count++;
                         if (count % 100 == 0) {
                             simulation.getCurrentState().log();
                         }
                         sailboat.setPosition(new Vector2D(simulation.getCurrentState().getPosition().getValue(0), simulation.getCurrentState().getPosition().getValue(1)));
+                        targets.forEach(target -> target.checkHit(simulation.getCurrentState().getBoatPosition()));
+                        int numberHits = targets.stream().mapToInt(t -> t.isHit() ? 1:0).sum();
+                        if (numberHits < targets.size()) targets.get(numberHits).setOpen(true);
+                        else {
+                            running[0] = false;
+                            System.out.println("You won!");
+                            double seconds = currentTime / 1000.0;
+                            System.out.printf("Time: %02d:%02d%n", (int)(seconds / 60), (int) (seconds % 60));
+                            targets.forEach(t -> {
+                                t.setOpen(false);
+                                t.setHit(false);
+                            });
+                            getChildren().add(new WinningScreen("Congratulation! \n Time: %02d:%02d%n".formatted((int)(seconds / 60), (int) (seconds % 60))));
+                        }
                     }
                     last = now;
                 }
+                if (running[0]) currentTime += System.currentTimeMillis() - lastTime;
+                lastTime = System.currentTimeMillis();
+                double seconds = currentTime / 1000.0;
+                timeText.setText("Time: %02d:%02d".formatted((int)(seconds / 60), (int) (seconds % 60)));
             }
         };
         timer.start();
 
 
-        getChildren().addAll(
-                arrows);
+        getChildren().add(arrows);
         arrows.update(simulation.getCurrentState());
 
         sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
         sailboat.getSail().rotate(simulation.getCurrentState().getPosition().getValue(3));
 
         final List<KeyCode> validKeys = Arrays.asList(KeyCode.UP, KeyCode.DOWN,
-                KeyCode.LEFT, KeyCode.RIGHT, KeyCode.SPACE, KeyCode.ESCAPE);
+                KeyCode.LEFT, KeyCode.RIGHT, KeyCode.SPACE);
         final Set<KeyCode> pressedKeys = new HashSet<>();
         setOnKeyReleased(e -> pressedKeys.clear());
 
         setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
                 System.out.println("Escape");
+                running[0] = false;
                 getChildren().add(new EscMenu(getChildren()));
             }
             if (validKeys.contains(e.getCode())) {
-                boatStats.update(stateSystem);
                 pressedKeys.add(e.getCode());
                 if (pressedKeys.contains(KeyCode.UP)) {
                     simulation.rotateSail(-1);
@@ -149,77 +156,25 @@ class WindTunnel extends Pane {
                 }  if (pressedKeys.contains(KeyCode.RIGHT)) {
                     simulation.rotateBoat(1);
                     sailboat.rotate(simulation.getCurrentState().getPosition().getValue(2));
-                }  if (pressedKeys.contains(KeyCode.SPACE)) {
-                    running[0] = !running[0]; // pause
-                    simulation.getCurrentState().log();
+                } if (pressedKeys.contains(KeyCode.SPACE)) {
+                    running[0] = !running[0];
+
                 }
             }
             sailboat.repaintSail(simulation.getCurrentState());
             arrows.update(simulation.getCurrentState());
         });
-
-       Scale s = new Scale();
-       s.setPivotX(Sailing.X_CENTER);
-       s.setPivotY(Sailing.Y_CENTER);
-       sailboat.getTransforms().add(s);
-
-       setOnScroll(event -> {
-           s.setX(s.getX() + event.getDeltaY() / 500);
-           s.setY(s.getY() + event.getDeltaY() / 500);
-       });
-    }
-
-    public SailboatGUI getSailboat() {
-        return sailboat;
     }
 
 
-    void makeDraggable(Node node, boolean x, boolean y, double[] xBounds, double[] yBounds) {
-        if (x && y) {
-
-            node.setOnMousePressed(e -> {
-                startY = e.getSceneY() - node.getTranslateY();
-                startX = e.getSceneX() - node.getTranslateX();
-            });
-            node.setOnMouseDragged(e -> {
-                node.setTranslateY(e.getSceneY() - startY);
-                node.setTranslateX(e.getSceneX() - startX);
+    void makeXDraggable(Node node, double[] xBounds) {
+        node.setOnMousePressed(e -> startX = e.getSceneX() - node.getTranslateX());
+        node.setOnMouseDragged(e -> {
+            node.setTranslateX(e.getSceneX() - startX);
                 if (xBounds != null) {
                     if (node.getTranslateX() > xBounds[1]) node.setTranslateX(xBounds[1]);
                     if (node.getTranslateX() < xBounds[0]) node.setTranslateX(xBounds[0]);
                 }
-                if (yBounds != null) {
-                    if (node.getTranslateY() > yBounds[1]) node.setTranslateY(yBounds[1]);
-                    if (node.getTranslateY() < yBounds[0]) node.setTranslateY(yBounds[0]);
-                }
-            });
-        } else if (x) {
-            node.setOnMousePressed(e -> {
-                    startX = e.getSceneX() - node.getTranslateX();
-            });
-
-            node.setOnMouseDragged(e -> {
-                node.setTranslateX(e.getSceneX() - startX);
-                    if (xBounds != null) {
-                        if (node.getTranslateX() > xBounds[1]) node.setTranslateX(xBounds[1]);
-                        if (node.getTranslateX() < xBounds[0]) node.setTranslateX(xBounds[0]);
-                    }
-            });
-
-        } else if (y) {
-            node.setOnMousePressed(e -> {
-                startY = e.getSceneY() - node.getTranslateY();
-            });
-
-            node.setOnMouseDragged(e -> {
-                node.setTranslateY(e.getSceneY() - startY);
-                if (yBounds != null) {
-                    if (node.getTranslateY() > yBounds[1]) node.setTranslateY(yBounds[1]);
-                    if (node.getTranslateY() < yBounds[0]) node.setTranslateY(yBounds[0]);
-                }
-            });
-
-        }
-
+        });
     }
 }

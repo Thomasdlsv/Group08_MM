@@ -48,6 +48,10 @@ public class StateSystem {
         return new Vector2D(velocity.getValue(2), velocity.getValue(3));
     }
 
+    public Vector2D getBoatPosition() {
+        return new Vector2D(position.getValue(0), position.getValue(1));
+    }
+
     public double getMass() {
         return mass;
     }

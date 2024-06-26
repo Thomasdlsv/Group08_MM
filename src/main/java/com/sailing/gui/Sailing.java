@@ -1,6 +1,5 @@
 package com.sailing.gui;
 
-import com.sailing.Sailboat;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -21,7 +20,7 @@ public class Sailing extends Application {
 
     @Override
     public void start(Stage stage) {
-        Scene scene = new Scene(new WindTunnel(new SailboatGUI(new Sailboat(), new SailboatGUI.SailGUI())), WIDTH, HEIGHT);
+        Scene scene = new Scene(new Parkour(), WIDTH, HEIGHT);
         scene.getRoot().requestFocus();
         stage.setTitle("Sailing Simulation");
         stage.setFullScreen(false);
