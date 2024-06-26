@@ -5,6 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 import java.util.List;
 
@@ -17,6 +18,13 @@ public class Menu extends Pane {
         setBackground(new Background(new BackgroundImage(Images.background, null, null, null, null)));
 
         getStylesheets().add("/styling.css");
+
+        Text title = new Text("Welcome to our \n Sailing Simulator!");
+        title.setTranslateX(WIDTH / 2 - 250);
+        title.setTranslateY(HEIGHT / 2 - 200);
+        title.setStyle("-fx-font-size: 60px;");
+        getChildren().add(title);
+
         Button windTunnel = new Button("Training");
         windTunnel.setPrefWidth(400);
         windTunnel.setPrefHeight(70);
