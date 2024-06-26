@@ -37,7 +37,7 @@ class Parkour extends Pane {
 
     long currentTime;
 
-    Parkour() {
+    Parkour(List<Vector2D> targetPositions) {
         sailboat = new SailboatGUI(new Sailboat(), new SailboatGUI.SailGUI(), 0.5);
         setBackground(new Background(new BackgroundImage(Images.background, null, null, null, null)));
         arrows = new Arrows(sailboat);
@@ -73,10 +73,9 @@ class Parkour extends Pane {
 
         currentTime = 0;
         ArrayList<Target> targets = new ArrayList<>();
-        targets.add(new Target(1, new Vector2D(50, -25)));
-        targets.add(new Target(2, new Vector2D(20, 25)));
-        targets.add(new Target(3, new Vector2D(-20, -25)));
-        targets.add(new Target(4, new Vector2D(-50, 25)));
+        for (int i = 0; i < targetPositions.size(); i++) {
+            targets.add(new Target(i + 1, targetPositions.get(i)));
+        }
         getChildren().addAll(targets);
 
         AnimationTimer timer = new AnimationTimer() {
@@ -111,7 +110,9 @@ class Parkour extends Pane {
                                 t.setOpen(false);
                                 t.setHit(false);
                             });
-                            getChildren().add(new WinningScreen("Congratulation! \n Time: %02d:%02d%n".formatted((int)(seconds / 60), (int) (seconds % 60))));
+                            getChildren().add(new WinningScreen(
+                                    "Congratulation! \n Time: %02d:%02d%n".formatted((int)(seconds / 60), (int) (seconds % 60)),
+                                    targetPositions));
                         }
                     }
                     last = now;

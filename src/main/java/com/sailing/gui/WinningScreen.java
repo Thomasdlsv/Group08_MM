@@ -1,15 +1,18 @@
 package com.sailing.gui;
 
+import com.sailing.math.data_structures.Vector2D;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+
+import java.util.List;
 
 import static com.sailing.gui.Sailing.HEIGHT;
 import static com.sailing.gui.Sailing.WIDTH;
 
 public class WinningScreen extends Pane {
 
-    WinningScreen(String message) {
+    WinningScreen(String message, List<Vector2D> targetPositions) {
 
         Text text = new Text(message);
         text.setTranslateX(WIDTH / 2 - 200);
@@ -24,7 +27,7 @@ public class WinningScreen extends Pane {
         retry.setTranslateY(HEIGHT / 2 - 100);
         retry.setOnAction(e -> {
             System.out.println("retry");
-            getScene().setRoot(new Parkour());
+            getScene().setRoot(new Parkour(targetPositions));
         });
 
         Button parkour = new Button("Back to Menu");
