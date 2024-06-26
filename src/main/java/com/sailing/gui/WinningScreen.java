@@ -27,7 +27,8 @@ public class WinningScreen extends Pane {
         retry.setTranslateY(HEIGHT / 2 - 100);
         retry.setOnAction(e -> {
             System.out.println("retry");
-            getScene().setRoot(new Parkour(targetPositions));
+            Sailing.window.getScene().setRoot(new Parkour(targetPositions));
+            Sailing.window.getScene().getRoot().requestFocus();
         });
 
         Button parkour = new Button("Back to Menu");
@@ -37,7 +38,8 @@ public class WinningScreen extends Pane {
         parkour.setTranslateY(HEIGHT / 2 );
         parkour.setOnAction(e -> {
             System.out.println("Menu");
-            getScene().setRoot(new Menu());
+            Sailing.window.getScene().setRoot(new Menu());
+            Sailing.window.getScene().getRoot().requestFocus();
         });
 
         getChildren().addAll(retry, parkour);

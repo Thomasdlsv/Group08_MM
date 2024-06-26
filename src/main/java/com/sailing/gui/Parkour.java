@@ -38,6 +38,7 @@ class Parkour extends Pane {
     long currentTime;
 
     Parkour(List<Vector2D> targetPositions) {
+
         sailboat = new SailboatGUI(new Sailboat(), new SailboatGUI.SailGUI(), 0.5);
         setBackground(new Background(new BackgroundImage(Images.background, null, null, null, null)));
         arrows = new Arrows(sailboat);

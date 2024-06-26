@@ -20,6 +20,7 @@ public class EscMenu extends Pane {
         resume.setOnAction(e -> {
             System.out.println("resume");
             children.remove(this);
+            Sailing.window.getScene().getRoot().requestFocus();
         });
 
         Button parkour = new Button("Back to Menu");
@@ -29,7 +30,8 @@ public class EscMenu extends Pane {
         parkour.setTranslateY(HEIGHT / 2 );
         parkour.setOnAction(e -> {
             System.out.println("Menu");
-            getScene().setRoot(new Menu());
+            Sailing.window.getScene().setRoot(new Menu());
+            Sailing.window.getScene().getRoot().requestFocus();
         });
 
         getChildren().addAll(resume, parkour);

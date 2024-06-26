@@ -21,20 +21,23 @@ public class Sailing extends Application {
     public static final double X_CENTER = WIDTH / 2;
     public static final double Y_CENTER = HEIGHT / 2;
 
+    public static Stage window;
+
     @Override
     public void start(Stage stage) {
+        window = stage;
         Scene scene = new Scene(new Parkour(List.of(
                 new Vector2D(50, -25),
                 new Vector2D(20, 25),
                 new Vector2D(-20, -25),
                 new Vector2D(-50, 25))), WIDTH, HEIGHT);
-        scene.getRoot().requestFocus();
-        stage.setTitle("Sailing Simulation");
-        stage.setFullScreen(false);
-        stage.setWidth(WIDTH);
-        stage.setHeight(HEIGHT);
-        stage.setScene(scene);
-        stage.show();
+        window.setTitle("Sailing Simulation");
+        window.setFullScreen(false);
+        window.setWidth(WIDTH);
+        window.setHeight(HEIGHT);
+        window.setScene(scene);
+        window.getScene().getRoot().requestFocus();
+        window.show();
     }
 
     public static void main(String[] args) {

@@ -24,7 +24,8 @@ public class Menu extends Pane {
         windTunnel.setTranslateY(HEIGHT / 2 - 100);
         windTunnel.setOnAction(e -> {
             System.out.println("Wind Tunnel");
-            getScene().setRoot(new WindTunnel());
+            Sailing.window.getScene().setRoot((new WindTunnel()));
+            Sailing.window.getScene().getRoot().requestFocus();
         });
 
         Button parkour1 = new Button("Parkour 1");
@@ -34,11 +35,12 @@ public class Menu extends Pane {
         parkour1.setTranslateY(HEIGHT / 2 );
         parkour1.setOnAction(e -> {
             System.out.println("Parkour");
-            getScene().setRoot(new Parkour(List.of(
+            Sailing.window.getScene().setRoot(new Parkour(List.of(
                     new Vector2D(50, -25),
                     new Vector2D(20, 25),
                     new Vector2D(-20, -25),
                     new Vector2D(-50, 25))));
+            Sailing.window.getScene().getRoot().requestFocus();
         });
 
         Button parkour2 = new Button("Parkour 2");
@@ -48,11 +50,12 @@ public class Menu extends Pane {
         parkour2.setTranslateY(HEIGHT / 2 + 100);
         parkour2.setOnAction(e -> {
             System.out.println("Parkour");
-            getScene().setRoot(new Parkour(List.of(
+            Sailing.window.getScene().setRoot(new Parkour(List.of(
                     new Vector2D(-50, 25),
                     new Vector2D(50, -25),
                     new Vector2D(20, 25),
                     new Vector2D(-20, -25))));
+            Sailing.window.getScene().getRoot().requestFocus();
         });
 
         getChildren().addAll(windTunnel, parkour1, parkour2);
